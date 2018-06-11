@@ -10,18 +10,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
+public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
     private String[] dataSet;
     private Context context;
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView textview;
-
-        public ViewHolder(View view){
-            super(view);
-            textview = (TextView) view.findViewById(R.id.textView3);
-        }
-    }
-
 
     public RecyclerAdapter(String[] dataSet, Context context){
         this.dataSet = dataSet;
@@ -32,20 +23,21 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     public int getItemCount() {
         return dataSet.length;
     }
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+
+    public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.my_text_view, parent, false);
-        ViewHolder vh = new ViewHolder(v);
+        RecyclerViewHolder vh = new RecyclerViewHolder(v);
         return vh;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final RecyclerViewHolder holder, final int position) {
         Log.d("bind","d");
         holder.textview.setText(dataSet[position]);
         holder.textview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, holder.textview.getText(), Toast.LENGTH_LONG).show();
+                Toast.makeText(context, holder.textview.getText(), Toast.LENGTH_SHORT).show();
             }
         });
     }
