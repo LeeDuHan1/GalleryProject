@@ -1,6 +1,7 @@
 package com.example.btyisu.galleryproject;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -10,18 +11,20 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
-    private String[] dataSet;
+    private ArrayList<String> dataSet = new ArrayList<>();
     private Context context;
 
-    public RecyclerAdapter(String[] dataSet, Context context){
+    public RecyclerAdapter(ArrayList<String> dataSet, Context context){
         this.dataSet = dataSet;
         this.context = context;
     }
 
     @Override
     public int getItemCount() {
-        return dataSet.length;
+        return dataSet.size();
     }
 
     public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
@@ -33,12 +36,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull final RecyclerViewHolder holder, final int position) {
         Log.d("bind","d");
-        holder.textview.setText(dataSet[position]);
-        holder.textview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context, holder.textview.getText(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        Uri uri = Uri.parse(dataSet.get(position));
+        holder.imageView.setImageURI(uri);
     }
 }
