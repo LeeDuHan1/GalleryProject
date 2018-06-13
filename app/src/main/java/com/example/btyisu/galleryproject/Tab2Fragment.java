@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 public class Tab2Fragment extends Fragment{
-    private RecyclerView musicRecyclerView;
+    private RecyclerView recyclerView;
     private RecyclerView.Adapter recyclerAdapter;
     private RecyclerView.LayoutManager layoutManager;
     ArrayList<String> dataSet = new ArrayList<>();
@@ -26,15 +26,15 @@ public class Tab2Fragment extends Fragment{
         GetFileList getFileList = new GetFileList(getActivity(),"aircraft");
         this.dataSet = getFileList.getTitleList();
 
-        View view = inflater.inflate(R.layout.music_fragment, container, false);
-        musicRecyclerView = (RecyclerView) view.findViewById(R.id.music_recycler_view);
-        musicRecyclerView.setHasFixedSize(true); // to improve performance if you know that changes.
+        View view = inflater.inflate(R.layout.tab2_fragment, container, false);
+        recyclerView = (RecyclerView) view.findViewById(R.id.tab2_recycler_view);
+        recyclerView.setHasFixedSize(true); // to improve performance if you know that changes.
 
         layoutManager = new GridLayoutManager(getActivity(),2);
-        musicRecyclerView.setLayoutManager(layoutManager);
+        recyclerView.setLayoutManager(layoutManager);
 
         recyclerAdapter = new RecyclerAdapter(dataSet,getContext());
-        musicRecyclerView.setAdapter(recyclerAdapter);
+        recyclerView.setAdapter(recyclerAdapter);
         return view;
     }
 

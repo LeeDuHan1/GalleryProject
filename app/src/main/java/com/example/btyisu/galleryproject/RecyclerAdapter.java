@@ -17,8 +17,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
     private ArrayList<String> dataSet = new ArrayList<>();
     private Context context;
 
-    public RecyclerAdapter(ArrayList<String> dataSet, Context context){
-        this.dataSet = dataSet;
+    public RecyclerAdapter( Context context){
+//        this.dataSet = dataSet;
         this.context = context;
     }
 
@@ -38,5 +38,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
         Log.d("bind","d");
         Uri uri = Uri.parse(dataSet.get(position));
         holder.imageView.setImageURI(uri);
+    }
+
+    public void dataAdd(int position, String data){
+        this.dataSet.add(position,data);
+        notifyItemInserted(position);
+    }
+    public void dataDelete(int position){
+        this.dataSet.remove(position);
     }
 }
