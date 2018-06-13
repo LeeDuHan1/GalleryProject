@@ -18,14 +18,14 @@ import android.widget.TextView;
 import java.io.File;
 import java.util.ArrayList;
 
-public class FoodFragment extends Fragment{
+public class Tab1Fragment extends Fragment{
     private Activity activity;
     private RecyclerView foodRecyclerView;
     private RecyclerView.Adapter recyclerAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private ArrayList<String> dataSet;
 
-    public FoodFragment(){
+    public Tab1Fragment(){
 
     }
 
@@ -42,7 +42,7 @@ public class FoodFragment extends Fragment{
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        GetFileList getFileList = new GetFileList(getActivity(),"food");
+        GetFileList getFileList = new GetFileList(getActivity(),"flower");
         this.dataSet = getFileList.getTitleList();
 
         View view = inflater.inflate(R.layout.food_fragment, container, false);

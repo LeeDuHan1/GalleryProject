@@ -12,18 +12,18 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
-public class MusicFragment extends Fragment{
+public class Tab2Fragment extends Fragment{
     private RecyclerView musicRecyclerView;
     private RecyclerView.Adapter recyclerAdapter;
     private RecyclerView.LayoutManager layoutManager;
     ArrayList<String> dataSet = new ArrayList<>();
-    public MusicFragment(){
+    public Tab2Fragment(){
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        GetFileList getFileList = new GetFileList(getActivity(),"music");
+        GetFileList getFileList = new GetFileList(getActivity(),"aircraft");
         this.dataSet = getFileList.getTitleList();
 
         View view = inflater.inflate(R.layout.music_fragment, container, false);
