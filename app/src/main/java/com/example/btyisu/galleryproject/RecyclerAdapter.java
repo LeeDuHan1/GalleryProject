@@ -61,7 +61,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
-                bundle.putString("uri",dataSet.get(position));
+                bundle.putStringArrayList("dataSet",dataSet);
+                bundle.putInt("position",position);
 
                 FragmentManager fragmentManager = ((AppCompatActivity)context).getSupportFragmentManager();
                 ImageDialogFragment imageDialogFragment = new ImageDialogFragment();
