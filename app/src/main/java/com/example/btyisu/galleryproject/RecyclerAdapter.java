@@ -1,6 +1,8 @@
 package com.example.btyisu.galleryproject;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
@@ -36,8 +40,32 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull final RecyclerViewHolder holder, final int position) {
         Log.d("bind","d");
-        Uri uri = Uri.parse(dataSet.get(position));
-        holder.imageView.setImageURI(uri);
+        String path = dataSet.get(position);
+        Uri uri = Uri.parse(path);
+        InputStream imageStream = null;
+        try {
+            imageStream = this.context.getContentResolver().openInputStream(uri);
+        }catch (FileNotFoundException e){
+            e.printStackTrace();
+        }
+        BitmapFactory.Options bitOptions = new BitmapFactory.Options();
+        bitOptions.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(path,bitOptions);
+
+        int imageWidth = bitOptions.outWidth;
+        int imageHeight = bitOptions.outHeight;
+        String imageType = bitOptions.outMimeType;
+
+        int targetW = holder.imageView.getWidth();
+        int targetH = holder.imageView.getHeight();
+
+        int scaleFactor = Math.min(imageWidth/targetW, imageHeight/targetH);
+        bitOptions.inJustDecodeBounds = false;
+        bitOptions.inSampleSize = scaleFactor;
+        bitOptions.inPurgeable = true;
+
+        Bitmap bitmap = BitmapFactory.decodeStream(imageStream);
+        holder.imageView.setImageBitmap(bitmap);
     }
 
     public void dataAdd(int position, String data){

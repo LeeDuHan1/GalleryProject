@@ -4,9 +4,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
-
-import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
 
 public class GetFileList{
