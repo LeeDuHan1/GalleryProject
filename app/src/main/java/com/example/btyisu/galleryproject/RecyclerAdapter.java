@@ -39,7 +39,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull final RecyclerViewHolder holder, final int position) {
-        Log.d("bind","d");
+
+        Log.d("bind",holder.imageView.getWidth()+"");
         StringBuilder filePath = new StringBuilder("file://");
         filePath.append(dataSet.get(position));
         Uri uri = Uri.parse(filePath.toString());

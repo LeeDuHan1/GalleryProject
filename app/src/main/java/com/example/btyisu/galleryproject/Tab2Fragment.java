@@ -23,7 +23,7 @@ public class Tab2Fragment extends Fragment{
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        GetFileList getFileList = new GetFileList(getActivity(),"aircraft");
+        GetFileList getFileList = new GetFileList(getActivity(),"music");
         this.dataSet = getFileList.getTitleList();
 
         View view = inflater.inflate(R.layout.tab2_fragment, container, false);

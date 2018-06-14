@@ -8,9 +8,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import java.util.ArrayList;
 
@@ -38,17 +40,21 @@ public class Tab1Fragment extends Fragment{
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        GetFileList getFileList = new GetFileList(getActivity(),"flower");
+        GetFileList getFileList = new GetFileList(getActivity(),"food");
         this.dataSet = getFileList.getTitleList();
 
         View view = inflater.inflate(R.layout.tab1_fragment, container, false);
+
+        int width = getResources().getDisplayMetrics().widthPixels;
+        Log.d("디스플레이크기 : ", width+"");
+
         recyclerView = (RecyclerView) view.findViewById(R.id.tab1_recycler_view);
         recyclerView.setHasFixedSize(true); // to improve performance if you know that changes.
 
-        layoutManager = new GridLayoutManager(getActivity(),2);
-        recyclerView.setLayoutManager(layoutManager);
-
         recyclerAdapter = new RecyclerAdapter(dataSet,getContext());
+        layoutManager = new GridLayoutManager(getActivity(),2);
+        
+        recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(recyclerAdapter);
         return view;
     }
