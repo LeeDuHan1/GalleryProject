@@ -21,8 +21,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
     private ArrayList<String> dataSet = new ArrayList<>();
     private Context context;
 
-    public RecyclerAdapter( Context context){
-//        this.dataSet = dataSet;
+    public RecyclerAdapter(ArrayList<String> dataSet, Context context){
+        this.dataSet = dataSet;
         this.context = context;
     }
 
@@ -40,8 +40,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull final RecyclerViewHolder holder, final int position) {
         Log.d("bind","d");
-        String path = dataSet.get(position);
-        Uri uri = Uri.parse(path);
+        StringBuilder filePath = new StringBuilder("file://");
+        filePath.append(dataSet.get(position));
+        Uri uri = Uri.parse(filePath.toString());
         InputStream imageStream = null;
         try {
             imageStream = this.context.getContentResolver().openInputStream(uri);
@@ -50,18 +51,17 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
         }
         BitmapFactory.Options bitOptions = new BitmapFactory.Options();
         bitOptions.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(path,bitOptions);
 
         int imageWidth = bitOptions.outWidth;
         int imageHeight = bitOptions.outHeight;
         String imageType = bitOptions.outMimeType;
 
-        int targetW = holder.imageView.getWidth();
-        int targetH = holder.imageView.getHeight();
+        int targetW = holder.imageView.getMeasuredWidth();
+        int targetH = holder.imageView.getMeasuredHeight();
 
-        int scaleFactor = Math.min(imageWidth/targetW, imageHeight/targetH);
+//        int scaleFactor = Math.min(imageWidth/targetW, imageHeight/targetH);
         bitOptions.inJustDecodeBounds = false;
-        bitOptions.inSampleSize = scaleFactor;
+//        bitOptions.inSampleSize = scaleFactor;
         bitOptions.inPurgeable = true;
 
         Bitmap bitmap = BitmapFactory.decodeStream(imageStream);

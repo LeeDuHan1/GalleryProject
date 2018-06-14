@@ -48,7 +48,7 @@ public class Tab1Fragment extends Fragment{
         layoutManager = new GridLayoutManager(getActivity(),2);
         recyclerView.setLayoutManager(layoutManager);
 
-        recyclerAdapter = new RecyclerAdapter(getContext());
+        recyclerAdapter = new RecyclerAdapter(dataSet,getContext());
         recyclerView.setAdapter(recyclerAdapter);
         return view;
     }
