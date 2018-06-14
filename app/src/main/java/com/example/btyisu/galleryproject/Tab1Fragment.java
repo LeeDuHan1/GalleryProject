@@ -52,7 +52,7 @@ public class Tab1Fragment extends Fragment{
         recyclerView.setHasFixedSize(true); // to improve performance if you know that changes.
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL));
-        recyclerAdapter = new RecyclerAdapter(dataSet,getContext());
+        recyclerAdapter = new RecyclerAdapter(dataSet,activity);
 
         int imageSize = 700;
         int spanCount = width/700;

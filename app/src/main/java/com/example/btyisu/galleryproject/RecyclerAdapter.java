@@ -1,12 +1,18 @@
 package com.example.btyisu.galleryproject;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -24,7 +30,8 @@ import java.util.ArrayList;
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
     private ArrayList<String> dataSet = new ArrayList<>();
     private Context context;
-
+    private Bitmap bitmap;
+    private Uri uri;
     public RecyclerAdapter(ArrayList<String> dataSet, Context context){
         this.dataSet = dataSet;
         this.context = context;
@@ -45,33 +52,21 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
     public void onBindViewHolder(@NonNull final RecyclerViewHolder holder, final int position) {
         StringBuilder filePath = new StringBuilder("file://");
         filePath.append(dataSet.get(position));
-        Uri uri = Uri.parse(filePath.toString());
-        InputStream imageStream = null;
-        try {
-            imageStream = this.context.getContentResolver().openInputStream(uri);
-        }catch (FileNotFoundException e){
-            e.printStackTrace();
-        }
-        BitmapFactory.Options bitOptions = new BitmapFactory.Options();
-        bitOptions.inJustDecodeBounds = true;
+        uri = Uri.parse(filePath.toString());
 
-        int imageWidth = bitOptions.outWidth;
-        int imageHeight = bitOptions.outHeight;
-        String imageType = bitOptions.outMimeType;
-
-//        int scaleFactor = Math.min(imageWidth/targetW, imageHeight/targetH);
-        bitOptions.inJustDecodeBounds = false;
-//        bitOptions.inSampleSize = scaleFactor;
-        bitOptions.inPurgeable = true;
-
-        Bitmap bitmap = BitmapFactory.decodeStream(imageStream);
-        Bitmap resized = Bitmap.createScaledBitmap(bitmap, 700,700, true);
-        holder.imageView.setImageBitmap(resized);
+        ImageTask imageTask = new ImageTask(holder, context, uri, 700);
+        imageTask.execute();
 
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("position : ",position+"");
+                Bundle bundle = new Bundle();
+                bundle.putString("uri",dataSet.get(position));
+
+                FragmentManager fragmentManager = ((AppCompatActivity)context).getSupportFragmentManager();
+                ImageDialogFragment imageDialogFragment = new ImageDialogFragment();
+                imageDialogFragment.setArguments(bundle);
+                imageDialogFragment.show(fragmentManager,"test");
             }
         });
     }
