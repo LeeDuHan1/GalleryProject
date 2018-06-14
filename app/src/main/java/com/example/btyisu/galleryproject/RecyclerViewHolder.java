@@ -13,6 +13,7 @@ public class RecyclerViewHolder extends RecyclerView.ViewHolder {
     public RecyclerViewHolder(View view){
         super(view);
         imageView = (ImageView) view.findViewById(R.id.gridImageView);
-
     }
+
+
 }

@@ -3,13 +3,17 @@ package com.example.btyisu.galleryproject;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,8 +43,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull final RecyclerViewHolder holder, final int position) {
-
-        Log.d("bind",holder.imageView.getWidth()+"");
         StringBuilder filePath = new StringBuilder("file://");
         filePath.append(dataSet.get(position));
         Uri uri = Uri.parse(filePath.toString());
@@ -57,16 +59,21 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
         int imageHeight = bitOptions.outHeight;
         String imageType = bitOptions.outMimeType;
 
-        int targetW = holder.imageView.getMeasuredWidth();
-        int targetH = holder.imageView.getMeasuredHeight();
-
 //        int scaleFactor = Math.min(imageWidth/targetW, imageHeight/targetH);
         bitOptions.inJustDecodeBounds = false;
 //        bitOptions.inSampleSize = scaleFactor;
         bitOptions.inPurgeable = true;
 
         Bitmap bitmap = BitmapFactory.decodeStream(imageStream);
-        holder.imageView.setImageBitmap(bitmap);
+        Bitmap resized = Bitmap.createScaledBitmap(bitmap, 700,700, true);
+        holder.imageView.setImageBitmap(resized);
+
+        holder.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("position : ",position+"");
+            }
+        });
     }
 
     public void dataAdd(int position, String data){
@@ -76,4 +83,5 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
     public void dataDelete(int position){
         this.dataSet.remove(position);
     }
+
 }
