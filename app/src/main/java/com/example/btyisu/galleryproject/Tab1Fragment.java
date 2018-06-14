@@ -54,6 +54,7 @@ public class Tab1Fragment extends Fragment{
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL));
         recyclerAdapter = new RecyclerAdapter(dataSet,activity);
 
+
         int imageSize = 700;
         int spanCount = width/700;
         int space = (width - (700*spanCount))/(spanCount*2);

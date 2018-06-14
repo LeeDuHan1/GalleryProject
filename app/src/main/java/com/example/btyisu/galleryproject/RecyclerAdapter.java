@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -28,7 +29,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
-    private ArrayList<String> dataSet = new ArrayList<>();
+    private ArrayList<String> dataSet;
     private Context context;
     private Bitmap bitmap;
     private Uri uri;
@@ -52,10 +53,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
     public void onBindViewHolder(@NonNull final RecyclerViewHolder holder, final int position) {
         StringBuilder filePath = new StringBuilder("file://");
         filePath.append(dataSet.get(position));
-        uri = Uri.parse(filePath.toString());
 
-        ImageTask imageTask = new ImageTask(holder, context, uri, 700);
-        imageTask.execute();
+        ImageTask imageTask = new ImageTask(holder, context, 700);
+        imageTask.execute(filePath.toString());
 
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override

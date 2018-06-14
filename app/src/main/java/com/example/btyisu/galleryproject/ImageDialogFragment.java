@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 public class ImageDialogFragment extends DialogFragment {
     private ImageView imageView;
+    private int imageSize = 1200;
     public ImageDialogFragment(){
 
     }
@@ -29,16 +30,17 @@ public class ImageDialogFragment extends DialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.image_dialog_fragment, container, false);
         imageView = (ImageView) view.findViewById(R.id.dialogImageView);
+        ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
+        layoutParams.width = imageSize;
+        layoutParams.height = imageSize;
+        imageView.setLayoutParams(layoutParams);
         Bundle extra = getArguments();
         extra.getString("uri");
-        Uri uri = Uri.parse(extra.getString("uri"));
-        imageView.setImageURI(uri);
+        StringBuilder filePath = new StringBuilder("file://");
+        Uri uri = Uri.parse(filePath.append(extra.getString("uri")).toString());
 
-        ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
-        layoutParams.width = 700;
-        layoutParams.height = 700;
-
-        imageView.setLayoutParams(layoutParams);
+        BitmapUtil bitmapUtil = new BitmapUtil();
+        imageView.setImageBitmap(bitmapUtil.getBitmapFromUri(getActivity(), uri, imageSize));
 
         return view;
     }
