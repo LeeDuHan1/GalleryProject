@@ -36,8 +36,6 @@ public class Tab1Fragment extends Fragment{
         }
     }
 
-
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -47,9 +45,9 @@ public class Tab1Fragment extends Fragment{
         View view = inflater.inflate(R.layout.tab1_fragment, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.tab1_recycler_view);
 
-        int width = getResources().getDisplayMetrics().widthPixels;
-        int spanCount = width/imageSize;
-        int space = (width - (imageSize*spanCount))/(spanCount*2);
+        int deviceWidth = getResources().getDisplayMetrics().widthPixels;
+        int spanCount = deviceWidth/imageSize;
+        int space = (deviceWidth - (imageSize*spanCount))/(spanCount*2);
         Log.d("space", space+"");
         layoutManager = new GridLayoutManager(getActivity(),spanCount);
         recyclerView.setLayoutManager(layoutManager);

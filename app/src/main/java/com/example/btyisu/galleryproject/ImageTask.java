@@ -29,7 +29,7 @@ public class ImageTask extends AsyncTask<String, String, Bitmap> {
     protected Bitmap doInBackground(String... arg) {
         Uri uri = Uri.parse(arg[0]);
         BitmapUtil bitmapUtil = new BitmapUtil();
-        bitmap = bitmapUtil.getBitmapFromUri(context,uri,size);
+        bitmap = bitmapUtil.getBitmapFromUri(uri, size);
         return bitmap;
     }
 

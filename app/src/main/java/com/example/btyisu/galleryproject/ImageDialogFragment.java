@@ -16,9 +16,7 @@ import java.util.ArrayList;
 public class ImageDialogFragment extends DialogFragment {
     private ImageView imageView;
     private int imageSize = 1200;
-    public ImageDialogFragment(){
-
-    }
+    public ImageDialogFragment(){}
 
     @Override
     public void setArguments(@Nullable Bundle args) {
@@ -42,7 +40,7 @@ public class ImageDialogFragment extends DialogFragment {
         Uri uri = Uri.parse(filePath.append(extra.getString("uri")).toString());
 
         BitmapUtil bitmapUtil = new BitmapUtil();
-        imageView.setImageBitmap(bitmapUtil.getBitmapFromUri(getActivity(), uri, imageSize));
+        imageView.setImageBitmap(bitmapUtil.getBitmapFromUri(uri, imageSize));
 
         return view;
     }

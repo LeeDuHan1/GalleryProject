@@ -48,9 +48,9 @@ public class Tab2Fragment extends Fragment{
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL));
         recyclerAdapter = new RecyclerAdapter(dataSet,activity);
 
-        int width = getResources().getDisplayMetrics().widthPixels;
-        int spanCount = width/imageSize;
-        int space = (width - (imageSize*spanCount))/(spanCount*2);
+        int deviceWidth = getResources().getDisplayMetrics().widthPixels;
+        int spanCount = deviceWidth/imageSize;
+        int space = (deviceWidth - (imageSize*spanCount))/(spanCount*2);
         Log.d("space", space+"");
         layoutManager = new GridLayoutManager(getActivity(),spanCount);
         recyclerView.setLayoutManager(layoutManager);

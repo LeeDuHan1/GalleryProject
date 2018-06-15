@@ -23,8 +23,10 @@ public class GetFileList{
     }
 
     public ArrayList<String> getTitleList(){
+            // 이미지 meta data를 포함하고 있는 파일의 경로와 이름을 가져온다.
             Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
             String[] projection = {MediaStore.MediaColumns.DATA, MediaStore.MediaColumns.DISPLAY_NAME};
+
 
             Cursor cursor = context.getContentResolver().query(uri, projection, null, null, MediaStore.MediaColumns.DATE_ADDED.concat(" desc"));
             int columIndex = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
