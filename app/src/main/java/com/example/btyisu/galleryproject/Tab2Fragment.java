@@ -21,7 +21,7 @@ public class Tab2Fragment extends Fragment{
     private RecyclerView recyclerView;
     private RecyclerView.Adapter recyclerAdapter;
     private RecyclerView.LayoutManager layoutManager;
-    ArrayList<String> dataSet = new ArrayList<>();
+    ArrayList<String> dataSet;
     int imageSize = 700;
 
     public Tab2Fragment(){

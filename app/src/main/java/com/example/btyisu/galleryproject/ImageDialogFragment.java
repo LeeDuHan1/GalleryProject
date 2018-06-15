@@ -30,10 +30,12 @@ public class ImageDialogFragment extends DialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.image_dialog_fragment, container, false);
         imageView = (ImageView) view.findViewById(R.id.dialogImageView);
+
         ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
         layoutParams.width = imageSize;
         layoutParams.height = imageSize;
         imageView.setLayoutParams(layoutParams);
+
         Bundle extra = getArguments();
         extra.getString("uri");
         StringBuilder filePath = new StringBuilder("file://");

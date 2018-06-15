@@ -6,16 +6,16 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 public class TabPagerAdapter extends FragmentPagerAdapter{
-    int tab_count;
+    int tabCount;
 
     public TabPagerAdapter(FragmentManager fm, int count){
         super(fm);
-        this.tab_count = count;
+        this.tabCount = count;
     }
 
     @Override
     public int getCount() {
-        return tab_count;
+        return tabCount;
     }
     @Override
     public Fragment getItem(int position) {

@@ -26,7 +26,6 @@ public class Tab1Fragment extends Fragment{
     int imageSize = 700;
 
     public Tab1Fragment(){
-
     }
 
     @Override
@@ -47,10 +46,6 @@ public class Tab1Fragment extends Fragment{
 
         View view = inflater.inflate(R.layout.tab1_fragment, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.tab1_recycler_view);
-        recyclerView.setHasFixedSize(true); // to improve performance if you know that changes.
-        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
-        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL));
-        recyclerAdapter = new RecyclerAdapter(dataSet,activity);
 
         int width = getResources().getDisplayMetrics().widthPixels;
         int spanCount = width/imageSize;
@@ -58,6 +53,12 @@ public class Tab1Fragment extends Fragment{
         Log.d("space", space+"");
         layoutManager = new GridLayoutManager(getActivity(),spanCount);
         recyclerView.setLayoutManager(layoutManager);
+
+        recyclerView.setHasFixedSize(true); // to improve performance if you know that changes.
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL));
+
+        recyclerAdapter = new RecyclerAdapter(dataSet,activity);
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.addItemDecoration(new SpacesItemDecoration(space));
 
