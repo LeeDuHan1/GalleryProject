@@ -23,6 +23,7 @@ public class Tab1Fragment extends Fragment{
     private RecyclerView.Adapter recyclerAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private ArrayList<String> dataSet;
+    int imageSize = 700;
 
     public Tab1Fragment(){
 
@@ -45,31 +46,20 @@ public class Tab1Fragment extends Fragment{
         this.dataSet = getFileList.getTitleList();
 
         View view = inflater.inflate(R.layout.tab1_fragment, container, false);
-
-        int width = getResources().getDisplayMetrics().widthPixels;
-        Log.d("디스플레이크기 : ", width+"");
         recyclerView = (RecyclerView) view.findViewById(R.id.tab1_recycler_view);
         recyclerView.setHasFixedSize(true); // to improve performance if you know that changes.
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL));
         recyclerAdapter = new RecyclerAdapter(dataSet,activity);
 
-
-        int imageSize = 700;
-        int spanCount = width/700;
-        int space = (width - (700*spanCount))/(spanCount*2);
+        int width = getResources().getDisplayMetrics().widthPixels;
+        int spanCount = width/imageSize;
+        int space = (width - (imageSize*spanCount))/(spanCount*2);
         Log.d("space", space+"");
         layoutManager = new GridLayoutManager(getActivity(),spanCount);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.addItemDecoration(new SpacesItemDecoration(space));
-
-//        int count = (int) Math.ceil(dataSet.size()/spanCount);
-//        Log.d("count",count+"");
-//        for(int i = 0; i < count; i++){
-//                recyclerView.addItemDecoration(new SpacesItemDecorationFirst(), i+spanCount);
-//
-//        }
 
         return view;
     }

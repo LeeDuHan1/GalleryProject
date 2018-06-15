@@ -33,6 +33,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
     private Context context;
     private Bitmap bitmap;
     private Uri uri;
+    private StringBuilder filePath;
+    private int imageSize = 700;
     public RecyclerAdapter(ArrayList<String> dataSet, Context context){
         this.dataSet = dataSet;
         this.context = context;
@@ -51,10 +53,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull final RecyclerViewHolder holder, final int position) {
-        StringBuilder filePath = new StringBuilder("file://");
+        filePath = new StringBuilder("file://");
         filePath.append(dataSet.get(position));
-
-        ImageTask imageTask = new ImageTask(holder, context, 700);
+        ImageTask imageTask = new ImageTask(holder, context, imageSize);
         imageTask.execute(filePath.toString());
 
         holder.imageView.setOnClickListener(new View.OnClickListener() {
