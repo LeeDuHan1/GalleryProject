@@ -25,7 +25,7 @@ import org.json.JSONObject;
 public class Tab3Fragment extends Fragment {
     private TextView textView;
     private Button button;
-    private final String server_url = "http://www.withhome360.com/test/test.php";
+    private final String server_url = "http://api.m.afreecatv.com/broad/a/items2?platform=google&current_page=1&theme_id=hot&order_by_column=view";
 
     public Tab3Fragment(){}
 
@@ -55,13 +55,14 @@ public class Tab3Fragment extends Fragment {
     }
 
     private Response.Listener<JSONObject> networkSuccessListener(){
-        final String TAG = "networkSuccesListenr";
+        final String TAG = "networkSuccesListner";
         return new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 String from_server = null;
                 try{
-                    from_server = response.getString("test");
+                    from_server = response.getString("data");
+                    Log.d(TAG, from_server);
                 }catch (JSONException e){
                     e.printStackTrace();
                     Log.e(TAG, e.getMessage());

@@ -35,6 +35,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
     private Uri uri;
     private StringBuilder filePath;
     private int imageSize = 700;
+
     public RecyclerAdapter(ArrayList<String> dataSet, Context context){
         this.dataSet = dataSet;
         this.context = context;
@@ -47,7 +48,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
 
     public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.my_text_view, parent, false);
-        RecyclerViewHolder vh = new RecyclerViewHolder(v);
+        RecyclerViewHolder vh = new RecyclerViewHolder(v, context, dataSet);
         return vh;
     }
 
@@ -57,19 +58,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerViewHolder> {
         filePath.append(dataSet.get(position));
         ImageTask imageTask = new ImageTask(holder, context, imageSize);
         imageTask.execute(filePath.toString());
-
-        holder.imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putString("uri",dataSet.get(position));
-
-                FragmentManager fragmentManager = ((AppCompatActivity)context).getSupportFragmentManager();
-                ImageDialogFragment imageDialogFragment = new ImageDialogFragment();
-                imageDialogFragment.setArguments(bundle);
-                imageDialogFragment.show(fragmentManager,"test");
-            }
-        });
     }
 
     public void dataAdd(int position, String data){
