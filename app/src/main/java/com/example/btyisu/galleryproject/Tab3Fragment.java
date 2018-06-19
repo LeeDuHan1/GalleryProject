@@ -1,10 +1,15 @@
 package com.example.btyisu.galleryproject;
 
+import android.app.Activity;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +32,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URL;
+import java.util.ArrayList;
 
 public class Tab3Fragment extends Fragment {
     private TextView textView;
@@ -34,19 +40,48 @@ public class Tab3Fragment extends Fragment {
     private ImageView imageView;
     private final String server_url = "http://api.m.afreecatv.com/broad/a/items";
 
+    private Activity activity;
+    private RecyclerView recyclerView;
+    private RecyclerView.Adapter recyclerAdapter;
+    private RecyclerView.LayoutManager layoutManager;
+    ArrayList<String> dataSet;
+    int imageSize = 700;
+
     public Tab3Fragment(){}
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if(context instanceof Activity){
+            activity = (Activity) context;
+        }
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final RequestQueue requestQueue = MyVolley.getInstance(getActivity()).getRequestQueue();
+        requestContentData();
 
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.tab3_fragment, container, false);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.tab2_recycler_view);
+        recyclerView.setHasFixedSize(true); // to improve performance if you know that changes.
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL));
+        recyclerAdapter = new RecyclerAdapter(dataSet,activity);
+
+        int deviceWidth = getResources().getDisplayMetrics().widthPixels;
+        int spanCount = deviceWidth/imageSize;
+        int space = (deviceWidth - (imageSize*spanCount))/(spanCount*2);
+        Log.d("space", space+"");
+        layoutManager = new GridLayoutManager(getActivity(),spanCount);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(recyclerAdapter);
+        recyclerView.addItemDecoration(new SpacesItemDecoration(space));
 
         textView = (TextView) rootView.findViewById(R.id.tab3_textview);
         button = (Button) rootView.findViewById(R.id.tab3_button);
         imageView = (ImageView) rootView.findViewById(R.id.imageView);
-
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.tab3_recycler_view);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,10 +110,13 @@ public class Tab3Fragment extends Fragment {
             public void onResponse(ApiResponse response) {
                 String result = null;
                     if (response != null) {
-                        result = response.getData().getGroups().get(0).get(1).getTitle();
+                        int count = response.getData().getGroups().size();
+                        ArrayList<String> str = new ArrayList<>();
+                        for(int i=0; i<count;i++) {
+                            str.add(response.getData().getGroups().get(0).get(i).getTitle());
+                        }
                     }
                     textView.setText(result);
-
             }
         };
     }
