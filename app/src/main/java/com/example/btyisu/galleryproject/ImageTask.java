@@ -8,6 +8,9 @@ import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.widget.ImageView;
 
+import com.example.btyisu.galleryproject.BitmapUtil;
+import com.example.btyisu.galleryproject.RecyclerViewHolder;
+
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
@@ -17,7 +20,7 @@ public class ImageTask extends AsyncTask<String, String, Bitmap> {
     private Bitmap bitmap;
     private Context context;
     private int size;
-    private  RecyclerViewHolder holder;
+    private RecyclerViewHolder holder;
     private final WeakReference imageViewReference;
     public ImageTask(RecyclerViewHolder holder,Context context, int size){
         this.holder = holder;

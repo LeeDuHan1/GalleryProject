@@ -2,6 +2,7 @@ package com.example.btyisu.galleryproject;
 
 import android.app.Activity;
 import android.content.Context;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -37,16 +38,13 @@ import java.net.URL;
 import java.util.ArrayList;
 
 public class Tab3Fragment extends Fragment {
-    private TextView textView;
-    private Button button;
-    private NetworkImageView imageView;
     private final String server_url = "http://api.m.afreecatv.com/broad/a/items";
-
+    private ImageLoader imageLoader;
     private Activity activity;
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter recyclerAdapter;
+    private NetRecyclerAdapter recyclerAdapter;
     private RecyclerView.LayoutManager layoutManager;
-    ArrayList<String> dataSet;
+    private ArrayList<String> dataSet = new ArrayList<>();
     int imageSize = 700;
 
     public Tab3Fragment(){}
@@ -63,36 +61,27 @@ public class Tab3Fragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         requestContentData();
-
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.tab3_fragment, container, false);
-//        recyclerView = (RecyclerView) rootView.findViewById(R.id.tab2_recycler_view);
-//        recyclerView.setHasFixedSize(true); // to improve performance if you know that changes.
-//        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
-//        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL));
-//        recyclerAdapter = new RecyclerAdapter(dataSet,activity);
-//
-//        int deviceWidth = getResources().getDisplayMetrics().widthPixels;
-//        int spanCount = deviceWidth/imageSize;
-//        int space = (deviceWidth - (imageSize*spanCount))/(spanCount*2);
-//        Log.d("space", space+"");
-//        layoutManager = new GridLayoutManager(getActivity(),spanCount);
-//        recyclerView.setLayoutManager(layoutManager);
-//        recyclerView.setAdapter(recyclerAdapter);
-//        recyclerView.addItemDecoration(new SpacesItemDecoration(space));
-
-//        textView = (TextView) rootView.findViewById(R.id.tab3_textView);
-//        button = (Button) rootView.findViewById(R.id.tab3_button);
-        imageView = (NetworkImageView) rootView.findViewById(R.id.imageView);
-//        recyclerView = (RecyclerView) rootView.findViewById(R.id.tab3_recycler_view);
-
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                requestContentData();
-            }
-        });
+        initView(rootView);
         return rootView;
     }
+
+    private void initView(View view){
+        recyclerView = (RecyclerView) view.findViewById(R.id.tab3_recycler_view);
+        recyclerView.setHasFixedSize(true); // to improve performance if you know that changes.
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL));
+        recyclerAdapter = new NetRecyclerAdapter(activity);
+
+        int deviceWidth = getResources().getDisplayMetrics().widthPixels;
+        int spanCount = deviceWidth/imageSize;
+        int space = (deviceWidth - (imageSize*spanCount))/(spanCount*2);
+        layoutManager = new GridLayoutManager(getActivity(),spanCount);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(recyclerAdapter);
+        recyclerView.addItemDecoration(new SpacesItemDecoration(space));
+    }
+
     protected void requestContentData(){
         final RequestQueue afRequestQueue = MyVolley.getInstance(getActivity()).getRequestQueue();
 
@@ -113,12 +102,14 @@ public class Tab3Fragment extends Fragment {
                 String result = null;
                 ArrayList<String> str = new ArrayList<>();
                     if (response != null) {
-                        int count = response.getData().getGroups().size();
-                        for(int i=0; i<count;i++) {
-                            str.add(response.getData().getGroups().get(0).get(i).getThumbnail());
+                        int count = response.getData().getGroups().get(0).size();
+                        for(int i=0; i< count;i++) {
+//                           dataSet.add(response.getData().getGroups().get(0).get(i).getThumbnail());
+                            recyclerAdapter.dataAdd(i,response.getData().getGroups().get(0).get(i).getThumbnail());
+                            recyclerAdapter.notifyItemInserted(i);
                         }
+
                     }
-//                    imageView.setImageUrl(str.get(0), );
             }
         };
     }

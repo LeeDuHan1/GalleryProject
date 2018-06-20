@@ -48,7 +48,7 @@ public class MyVolley {
 //    }
     public ImageLoader getImageLoader() {
         ImageLoader imageLoader = new ImageLoader(getRequestQueue(), new ImageLoader.ImageCache() {
-        private final LruCache<String,Bitmap> mCache = new LruCache<String, Bitmap>(10);
+        private final LruCache<String,Bitmap> mCache = new LruCache<String, Bitmap>(20);
             @Override
             public Bitmap getBitmap(String url) {
                 return mCache.get(url);

@@ -4,15 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.adroid.volley.toolbox.NetworkImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        app:srcCompat="@mipmap/ic_launcher" />
-
-    <!--<android.support.v7.widget.RecyclerView-->
-        <!--android:id="@+id/tab3_recycler_view"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent" />-->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/tab3_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#a99b9b"/>
 </LinearLayout>
