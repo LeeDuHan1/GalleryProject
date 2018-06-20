@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
 import com.example.btyisu.galleryproject.Volley.MyVolley;
 
 import java.util.ArrayList;
@@ -42,6 +43,11 @@ public class NetRecyclerAdapter extends RecyclerView.Adapter<NetRecyclerViewHold
         params.height = imageSize;
         holder.imageView.setLayoutParams(params);
         holder.imageView.setImageUrl(dataSet.get(position), MyVolley.getInstance(context).getImageLoader());
+
+//        Glide.with(context)
+//                .load(dataSet.get(position))
+//                .into(holder.imageView);
+
         Log.d("dataset", dataSet.get(position));
     }
 

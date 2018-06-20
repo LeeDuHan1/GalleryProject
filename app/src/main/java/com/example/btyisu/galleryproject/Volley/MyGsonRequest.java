@@ -2,6 +2,7 @@ package com.example.btyisu.galleryproject.Volley;
 
 import android.content.Context;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
@@ -12,6 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
 
 public class MyGsonRequest<T> extends Request<T> {
     private final Context mContext;
@@ -49,5 +51,10 @@ public class MyGsonRequest<T> extends Request<T> {
         }catch (JsonSyntaxException e){
             return Response.error(new ParseError(e));
         }
+    }
+
+    @Override
+    protected Map<String, String> getParams() throws AuthFailureError {
+        return super.getParams();
     }
 }

@@ -4,11 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/dialogImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        app:srcCompat="@drawable/back"
-        android:scaleType="fitXY"/>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/tab4_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#a99b9b"/>
 </LinearLayout>

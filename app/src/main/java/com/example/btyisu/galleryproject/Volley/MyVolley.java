@@ -3,6 +3,7 @@ package com.example.btyisu.galleryproject.Volley;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.LruCache;
 
 import com.android.volley.RequestQueue;
@@ -14,8 +15,9 @@ public class MyVolley {
     private RequestQueue requestQueue;
     private ImageLoader imageLoader;
     private final LruCache<String,Bitmap> cache = new LruCache<String,Bitmap>(20);
-
+    private Context context;
     private MyVolley(Context context) {
+        this.context = context;
         requestQueue = Volley.newRequestQueue(context);
         imageLoader = new ImageLoader(requestQueue,new ImageLoader.ImageCache(){
 
@@ -47,10 +49,13 @@ public class MyVolley {
 //        return imageLoader;
 //    }
     public ImageLoader getImageLoader() {
+
+
         ImageLoader imageLoader = new ImageLoader(getRequestQueue(), new ImageLoader.ImageCache() {
         private final LruCache<String,Bitmap> mCache = new LruCache<String, Bitmap>(20);
             @Override
             public Bitmap getBitmap(String url) {
+
                 return mCache.get(url);
             }
 

@@ -1,6 +1,8 @@
 package com.example.btyisu.galleryproject;
 
 import android.Manifest;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -20,11 +22,13 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.zip.Inflater;
 
@@ -34,7 +38,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        int memClass = ((ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
+        int maxMemory = (int)(Runtime.getRuntime().maxMemory()/1024);
 
+        Toast.makeText(getApplicationContext(),String.valueOf(maxMemory),Toast.LENGTH_SHORT).show();
         int permissionCheck = ContextCompat.checkSelfPermission( this, Manifest.permission.READ_EXTERNAL_STORAGE);
         if ( permissionCheck == PackageManager.PERMISSION_DENIED) {
             ActivityCompat.requestPermissions( this, new String[] {  Manifest.permission.READ_EXTERNAL_STORAGE  },11 );
@@ -43,7 +50,8 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText("Food"));
         tabLayout.addTab(tabLayout.newTab().setText("Music"));
-        tabLayout.addTab(tabLayout.newTab().setText("Afreeca"));
+        tabLayout.addTab(tabLayout.newTab().setText("Live"));
+        tabLayout.addTab(tabLayout.newTab().setText("VOD"));
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
         final PagerAdapter adapter = new TabPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
@@ -63,6 +71,16 @@ public class MainActivity extends AppCompatActivity {
             public void onTabReselected(TabLayout.Tab tab) {
             }
         });
+        if(savedInstanceState != null)
+        {
+            int cnt = savedInstanceState.getInt("num");
+        }
 
+
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
     }
 }

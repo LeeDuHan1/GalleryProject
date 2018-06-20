@@ -1,4 +1,4 @@
-package com.example.btyisu.galleryproject;
+package com.example.btyisu.galleryproject.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;

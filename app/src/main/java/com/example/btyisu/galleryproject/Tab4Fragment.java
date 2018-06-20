@@ -2,8 +2,6 @@ package com.example.btyisu.galleryproject;
 
 import android.app.Activity;
 import android.content.Context;
-import android.media.Image;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,9 +13,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -25,20 +20,14 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.NetworkImageView;
 import com.example.btyisu.galleryproject.Volley.MyGsonRequest;
 import com.example.btyisu.galleryproject.Volley.MyVolley;
 import com.example.btyisu.galleryproject.data.ApiResponse;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.net.URL;
 import java.util.ArrayList;
 
-public class Tab3Fragment extends Fragment {
-    private final String server_url = "http://api.m.afreecatv.com/broad/a/items2";
+public class Tab4Fragment extends Fragment {
+    private final String server_url = "http://api.m.afreecatv.com/station/video/section/a/items2";
     private ImageLoader imageLoader;
     private Activity activity;
     private RecyclerView recyclerView;
@@ -47,7 +36,7 @@ public class Tab3Fragment extends Fragment {
     private ArrayList<String> dataSet = new ArrayList<>();
     int imageSize = 700;
 
-    public Tab3Fragment(){}
+    public Tab4Fragment(){}
 
     @Override
     public void onAttach(Context context) {
@@ -61,13 +50,13 @@ public class Tab3Fragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         requestContentData();
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.tab3_fragment, container, false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.tab4_fragment, container, false);
         initView(rootView);
         return rootView;
     }
 
     private void initView(View view){
-        recyclerView = (RecyclerView) view.findViewById(R.id.tab3_recycler_view);
+        recyclerView = (RecyclerView) view.findViewById(R.id.tab4_recycler_view);
         recyclerView.setHasFixedSize(true); // to improve performance if you know that changes.
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL));

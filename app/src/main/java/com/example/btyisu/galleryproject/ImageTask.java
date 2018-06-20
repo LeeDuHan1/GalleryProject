@@ -2,19 +2,13 @@ package com.example.btyisu.galleryproject;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.v7.widget.RecyclerView;
 import android.widget.ImageView;
 
-import com.example.btyisu.galleryproject.BitmapUtil;
-import com.example.btyisu.galleryproject.RecyclerViewHolder;
+import com.example.btyisu.galleryproject.utils.BitmapUtil;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 
 public class ImageTask extends AsyncTask<String, String, Bitmap> {
     private Bitmap bitmap;
