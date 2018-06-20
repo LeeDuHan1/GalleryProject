@@ -52,6 +52,7 @@ public class Tab4Fragment extends Fragment {
         requestContentData();
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.tab4_fragment, container, false);
         initView(rootView);
+
         return rootView;
     }
 
@@ -61,13 +62,14 @@ public class Tab4Fragment extends Fragment {
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL));
         recyclerAdapter = new NetRecyclerAdapter(activity);
+        recyclerView.setAdapter(recyclerAdapter);
 
         int deviceWidth = getResources().getDisplayMetrics().widthPixels;
+        Log.d("디바이스",String.valueOf(deviceWidth));
         int spanCount = deviceWidth/imageSize;
         int space = (deviceWidth - (imageSize*spanCount))/(spanCount*2);
         layoutManager = new GridLayoutManager(getActivity(),spanCount);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(recyclerAdapter);
         recyclerView.addItemDecoration(new SpacesItemDecoration(space));
     }
 

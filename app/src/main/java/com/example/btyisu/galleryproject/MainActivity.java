@@ -33,7 +33,7 @@ import android.widget.Toast;
 import java.util.zip.Inflater;
 
 public class MainActivity extends AppCompatActivity {
-
+    private ViewPager viewPager = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setText("Live"));
         tabLayout.addTab(tabLayout.newTab().setText("VOD"));
 
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager = (ViewPager) findViewById(R.id.pager);
         final PagerAdapter adapter = new TabPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
 
         viewPager.setAdapter(adapter);
@@ -82,5 +82,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+        Log.d("화면전환","ㅇ");
+//        viewPager.setCurrentItem(onSaveInstanceState(););
     }
 }

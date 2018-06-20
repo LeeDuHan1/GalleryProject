@@ -43,12 +43,9 @@ public class NetRecyclerAdapter extends RecyclerView.Adapter<NetRecyclerViewHold
         params.height = imageSize;
         holder.imageView.setLayoutParams(params);
         holder.imageView.setImageUrl(dataSet.get(position), MyVolley.getInstance(context).getImageLoader());
-
 //        Glide.with(context)
 //                .load(dataSet.get(position))
 //                .into(holder.imageView);
-
-        Log.d("dataset", dataSet.get(position));
     }
 
     public void dataAdd(int position, String data){

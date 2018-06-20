@@ -63,6 +63,7 @@ public class Tab3Fragment extends Fragment {
         requestContentData();
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.tab3_fragment, container, false);
         initView(rootView);
+        setRetainInstance(true);
         return rootView;
     }
 
