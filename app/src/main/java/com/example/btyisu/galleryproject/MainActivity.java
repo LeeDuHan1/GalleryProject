@@ -78,11 +78,4 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        Log.d("화면전환","ㅇ");
-//        viewPager.setCurrentItem(onSaveInstanceState(););
-    }
 }

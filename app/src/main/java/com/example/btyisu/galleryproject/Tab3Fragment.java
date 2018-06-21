@@ -2,6 +2,7 @@ package com.example.btyisu.galleryproject;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
@@ -40,12 +41,13 @@ import java.util.ArrayList;
 public class Tab3Fragment extends Fragment {
     private final String server_url = "http://api.m.afreecatv.com/broad/a/items2";
     private ImageLoader imageLoader;
-    private Activity activity;
-    private RecyclerView recyclerView;
-    private NetRecyclerAdapter recyclerAdapter;
-    private RecyclerView.LayoutManager layoutManager;
+    private Activity activity= null;
+    private RecyclerView recyclerView = null;
+    private NetRecyclerAdapter recyclerAdapter = null;
+    private GridLayoutManager layoutManager= null;
     private ArrayList<String> dataSet = new ArrayList<>();
-    int imageSize = 700;
+    private SpacesItemDecoration spacesItemDecoration = null;
+    private int imageSize = 700;
 
     public Tab3Fragment(){}
 
@@ -55,6 +57,14 @@ public class Tab3Fragment extends Fragment {
         if(context instanceof Activity){
             activity = (Activity) context;
         }
+        Toast.makeText(getActivity(),"onAttach", Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        setImageCount();
     }
 
     @Nullable
@@ -64,6 +74,7 @@ public class Tab3Fragment extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.tab3_fragment, container, false);
         initView(rootView);
         setRetainInstance(true);
+        Toast.makeText(getActivity(),"onCreateView", Toast.LENGTH_SHORT).show();
         return rootView;
     }
 
@@ -73,14 +84,32 @@ public class Tab3Fragment extends Fragment {
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL));
         recyclerAdapter = new NetRecyclerAdapter(activity);
+        recyclerView.setAdapter(recyclerAdapter);
 
+        setImageCount();
+    }
+
+    private void setImageCount(){
         int deviceWidth = getResources().getDisplayMetrics().widthPixels;
+        Log.d("디바이스크기 : ",String.valueOf(deviceWidth));
         int spanCount = deviceWidth/imageSize;
         int space = (deviceWidth - (imageSize*spanCount))/(spanCount*2);
-        layoutManager = new GridLayoutManager(getActivity(),spanCount);
+        if (layoutManager == null) {
+            layoutManager = new GridLayoutManager(getActivity(), spanCount);
+        }else {
+            layoutManager.setSpanCount(spanCount);
+        }
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(recyclerAdapter);
-        recyclerView.addItemDecoration(new SpacesItemDecoration(space));
+        spacesItemDecoration = new SpacesItemDecoration(space);
+        Log.d("데코카운트",String.valueOf(recyclerView.getItemDecorationCount()));
+//        int count = recyclerView.getItemDecorationCount();
+//        for(int i = 0; i<count; i++){
+        if(recyclerView.getItemDecorationCount()>2){
+            recyclerView.removeItemDecorationAt(2);
+        }
+
+        recyclerView.addItemDecoration(spacesItemDecoration);
+        Log.d("space : ",String.valueOf(space));
     }
 
     protected void requestContentData(){
