@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -37,6 +38,8 @@ import org.json.JSONObject;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Tab3Fragment extends Fragment {
     private final String server_url = "http://api.m.afreecatv.com/broad/a/items2";
@@ -46,7 +49,9 @@ public class Tab3Fragment extends Fragment {
     private NetRecyclerAdapter recyclerAdapter = null;
     private GridLayoutManager layoutManager= null;
     private SpacesItemDecoration spacesItemDecoration = null;
+    private RequestQueue afRequestQueue = null;
     private int imageSize = 700;
+    public int page = 1;
 
     public Tab3Fragment(){}
 
@@ -70,6 +75,7 @@ public class Tab3Fragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         layoutManager = new GridLayoutManager(getActivity(),2);
+        afRequestQueue = MyVolley.getInstance(getActivity()).getRequestQueue();
     }
 
     @Nullable
@@ -97,7 +103,14 @@ public class Tab3Fragment extends Fragment {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 GridLayoutManager gridLayoutManager = ((GridLayoutManager)recyclerView.getLayoutManager());
-                Log.d("last",String.valueOf(gridLayoutManager.findLastVisibleItemPosition()));
+                int lastViewItem = gridLayoutManager.findLastVisibleItemPosition()+1;
+                Log.d("last",String.valueOf(lastViewItem));
+                Log.d("adpaterCount",String.valueOf(recyclerAdapter.getItemCount()));
+                if(recyclerAdapter.getItemCount() == lastViewItem){
+                    Log.d("발동","했으요");
+                    page += 1;
+                    requestContentData();
+                }
             }
         });
         setImageCount();
@@ -123,14 +136,19 @@ public class Tab3Fragment extends Fragment {
     }
 
     protected void requestContentData(){
-        final RequestQueue afRequestQueue = MyVolley.getInstance(getActivity()).getRequestQueue();
-
         MyGsonRequest<ApiResponse> myReq = new MyGsonRequest<ApiResponse>(this.getActivity(),
                 Request.Method.POST,
                 server_url,
                 ApiResponse.class,
                 networkSuccessListener(),
-                networkErrorListener());
+                networkErrorListener()) {
+            protected Map<String,String> getParams() throws AuthFailureError{
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("current_page",String.valueOf(page));
+                params.put("theme_id","all");
+                return params;
+            }
+        };
 
         afRequestQueue.add(myReq);
     }
