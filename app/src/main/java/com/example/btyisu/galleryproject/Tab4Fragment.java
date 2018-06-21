@@ -2,6 +2,7 @@ package com.example.btyisu.galleryproject;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,18 +24,19 @@ import com.android.volley.toolbox.ImageLoader;
 import com.example.btyisu.galleryproject.Volley.MyGsonRequest;
 import com.example.btyisu.galleryproject.Volley.MyVolley;
 import com.example.btyisu.galleryproject.data.ApiResponse;
+import com.example.btyisu.galleryproject.data.Content;
 
 import java.util.ArrayList;
 
 public class Tab4Fragment extends Fragment {
     private final String server_url = "http://api.m.afreecatv.com/station/video/section/a/items2";
     private ImageLoader imageLoader;
-    private Activity activity;
-    private RecyclerView recyclerView;
-    private NetRecyclerAdapter recyclerAdapter;
-    private RecyclerView.LayoutManager layoutManager;
-    private ArrayList<String> dataSet = new ArrayList<>();
-    int imageSize = 700;
+    private Activity activity= null;
+    private RecyclerView recyclerView = null;
+    private NetRecyclerAdapter recyclerAdapter = null;
+    private GridLayoutManager layoutManager= null;
+    private SpacesItemDecoration spacesItemDecoration = null;
+    private int imageSize = 700;
 
     public Tab4Fragment(){}
 
@@ -45,6 +47,12 @@ public class Tab4Fragment extends Fragment {
             activity = (Activity) context;
         }
     }
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        setImageCount();
+        recyclerAdapter.notifyDataSetChanged();
+    }
 
     @Nullable
     @Override
@@ -52,7 +60,8 @@ public class Tab4Fragment extends Fragment {
         requestContentData();
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.tab4_fragment, container, false);
         initView(rootView);
-
+        setRetainInstance(true);
+        Toast.makeText(getActivity(),"onCreateView", Toast.LENGTH_SHORT).show();
         return rootView;
     }
 
@@ -64,13 +73,30 @@ public class Tab4Fragment extends Fragment {
         recyclerAdapter = new NetRecyclerAdapter(activity,R.layout.content_vod_grid_view);
         recyclerView.setAdapter(recyclerAdapter);
 
+        setImageCount();
+    }
+
+    private void setImageCount(){
         int deviceWidth = getResources().getDisplayMetrics().widthPixels;
-        Log.d("디바이스",String.valueOf(deviceWidth));
+        Log.d("디바이스크기 : ",String.valueOf(deviceWidth));
         int spanCount = deviceWidth/imageSize;
         int space = (deviceWidth - (imageSize*spanCount))/(spanCount*2);
-        layoutManager = new GridLayoutManager(getActivity(),spanCount);
+        if (layoutManager == null) {
+            layoutManager = new GridLayoutManager(getActivity(), spanCount);
+        }else {
+            layoutManager.setSpanCount(spanCount);
+        }
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addItemDecoration(new SpacesItemDecoration(space));
+        spacesItemDecoration = new SpacesItemDecoration(space);
+        Log.d("데코카운트",String.valueOf(recyclerView.getItemDecorationCount()));
+//        int count = recyclerView.getItemDecorationCount();
+//        for(int i = 0; i<count; i++){
+        if(recyclerView.getItemDecorationCount()>2){
+            recyclerView.removeItemDecorationAt(2);
+        }
+
+        recyclerView.addItemDecoration(spacesItemDecoration);
+        Log.d("space : ",String.valueOf(space));
     }
 
     protected void requestContentData(){
@@ -92,16 +118,14 @@ public class Tab4Fragment extends Fragment {
             public void onResponse(ApiResponse response) {
                 String result = null;
                 ArrayList<String> str = new ArrayList<>();
-                    if (response != null) {
-                        int count = response.getData().getGroups().get(0).size();
-                        for(int i=0; i< count;i++) {
-//                           dataSet.add(response.getData().getGroups().get(0).get(i).getThumbnail());
-                            recyclerAdapter.dataAdd(i,response.getData().getGroups().get(0).get(i).getThumbnail());
-                            recyclerAdapter.notifyItemInserted(i);
-                        }
-                        Log.d("groups",String.valueOf(response.getData().getGroups().size()));
-
+                if (response != null) {
+                    int count = response.getData().getGroups().get(0).size();
+                    for(int i=0; i< count;i++) {
+                        recyclerAdapter.dataAdd(i,response.getData().getGroups().get(0).getContents().get(i));
+                        recyclerAdapter.notifyItemInserted(i);
                     }
+                    Log.d("TITLE",String.valueOf(response.getData().getGroups().get(0).getContents()));
+                }
             }
         };
     }
