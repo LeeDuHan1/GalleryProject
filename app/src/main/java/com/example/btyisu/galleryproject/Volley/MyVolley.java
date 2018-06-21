@@ -14,24 +14,10 @@ public class MyVolley {
     private static MyVolley one;
     private RequestQueue requestQueue;
     private ImageLoader imageLoader;
-    private final LruCache<String,Bitmap> cache = new LruCache<String,Bitmap>(20);
     private Context context;
     private MyVolley(Context context) {
         this.context = context;
         requestQueue = Volley.newRequestQueue(context);
-        imageLoader = new ImageLoader(requestQueue,new ImageLoader.ImageCache(){
-
-            @Override
-            public Bitmap getBitmap(String url) {
-                return cache.get(url);
-            }
-
-            @Override
-            public void putBitmap(String url, Bitmap bitmap) {
-                cache.put(url,bitmap);
-            }
-        });
-
     }
 
     public static MyVolley getInstance(Context context) {
@@ -49,18 +35,20 @@ public class MyVolley {
 //        return imageLoader;
 //    }
     public ImageLoader getImageLoader() {
-
+        Log.d("ImageLoader","get");
 
         ImageLoader imageLoader = new ImageLoader(getRequestQueue(), new ImageLoader.ImageCache() {
-        private final LruCache<String,Bitmap> mCache = new LruCache<String, Bitmap>(20);
+        private final LruCache<String,Bitmap> mCache = new LruCache<String, Bitmap>(4*1024*1024);
             @Override
             public Bitmap getBitmap(String url) {
+                Log.d("ImageLoader","getBitmap");
 
                 return mCache.get(url);
             }
 
             @Override
             public void putBitmap(String url, Bitmap bitmap) {
+                Log.d("ImageLoader","putBitmap");
                 mCache.put(url, bitmap);
             }
         });

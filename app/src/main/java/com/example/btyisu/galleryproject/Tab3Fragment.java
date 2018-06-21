@@ -83,7 +83,7 @@ public class Tab3Fragment extends Fragment {
         recyclerView.setHasFixedSize(true); // to improve performance if you know that changes.
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL));
-        recyclerAdapter = new NetRecyclerAdapter(activity,R.layout.content_live_grid_view);
+        recyclerAdapter = new NetRecyclerAdapter(activity,R.layout.content_live_grid_view,false);
         recyclerView.setAdapter(recyclerAdapter);
 
         setImageCount();
@@ -99,7 +99,10 @@ public class Tab3Fragment extends Fragment {
         }else {
             layoutManager.setSpanCount(spanCount);
         }
-        recyclerView.setLayoutManager(layoutManager);
+        if(recyclerView.getLayoutManager() == null){
+            recyclerView.setLayoutManager(layoutManager);
+
+        }
         spacesItemDecoration = new SpacesItemDecoration(space);
         Log.d("데코카운트",String.valueOf(recyclerView.getItemDecorationCount()));
 //        int count = recyclerView.getItemDecorationCount();

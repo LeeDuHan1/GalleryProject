@@ -1,10 +1,14 @@
 package com.example.btyisu.galleryproject;
 
+import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,29 +16,76 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.btyisu.galleryproject.Volley.MyVolley;
 import com.example.btyisu.galleryproject.utils.StringUtils;
 
 public class NetImageDialogFragment extends DialogFragment {
-    private NetworkImageView imageView;
+    private ImageView imageView;
     public TextView mTitleText;
     public TextView mUserNickText;
     public TextView mViewCntText;
     private StringBuilder mViewCntString = new StringBuilder("");
-
+    private RequestOptions options = null;
     private int imageSize = 1200;
+    private long mTimeStamp;
     public NetImageDialogFragment(){}
+
+//    public static NetImageDialogFragment getInstance(){
+//        return LazyHolder.INSTANCE;
+//    }
+//    private static class LazyHolder{
+//        private static final NetImageDialogFragment INSTANCE = new NetImageDialogFragment();
+//    }
 
     @Override
     public void setArguments(@Nullable Bundle args) {
         super.setArguments(args);
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mTimeStamp = System.currentTimeMillis();
+        options = new RequestOptions()
+                .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .placeholder(R.drawable.thumb_default_list)
+                .error(R.drawable.thumb_default_list);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle extra = getArguments();
+        long mGetTimeStamp = Long.parseLong(extra.getString("timeStamp"));
+
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.net_image_dialog_fragment, container, false);
-        imageView = (NetworkImageView) view.findViewById(R.id.netDialogImageView);
+        initView(view);
+
+
+        Bundle extra = getArguments();
+        Glide.with(getActivity())
+                .load(extra.getString("url"))
+                .apply(options)
+                .into(imageView);
+
+        mTitleText.setText(extra.getString("title"));
+        mUserNickText.setText(extra.getString("userNick"));
+        mViewCntString.append(extra.getString("viewCnt")).append("명 시청중");
+        mViewCntText.setText(getContext().getString(R.string.string_live_viewer_count,extra.getString("viewCnt")));
+        return view;
+    }
+
+    private void initView(View view) {
+        imageView = (ImageView) view.findViewById(R.id.netDialogImageView);
         mTitleText = (TextView) view.findViewById(R.id.title_text);
         mUserNickText = (TextView) view.findViewById(R.id.user_nick_text);
         mViewCntText = (TextView) view.findViewById(R.id.view_cnt_text);
@@ -47,13 +98,5 @@ public class NetImageDialogFragment extends DialogFragment {
         ViewGroup.LayoutParams mTitleParams = mTitleText.getLayoutParams();
         mTitleParams.width = imageSize;
         mTitleText.setLayoutParams(mTitleParams);
-
-        Bundle extra = getArguments();
-        imageView.setImageUrl(extra.getString("url"), MyVolley.getInstance(getContext()).getImageLoader());
-        mTitleText.setText(extra.getString("title"));
-        mUserNickText.setText(extra.getString("userNick"));
-        mViewCntString.append(extra.getString("viewCnt")).append("명 시청중");
-        mViewCntText.setText(getContext().getString(R.string.string_live_viewer_count,extra.getString("viewCnt")));
-        return view;
     }
 }
