@@ -83,7 +83,7 @@ public class Tab3Fragment extends Fragment {
         recyclerView.setHasFixedSize(true); // to improve performance if you know that changes.
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL));
-        recyclerAdapter = new NetRecyclerAdapter(activity);
+        recyclerAdapter = new NetRecyclerAdapter(activity,R.layout.content_live_grid_view);
         recyclerView.setAdapter(recyclerAdapter);
 
         setImageCount();
@@ -136,9 +136,14 @@ public class Tab3Fragment extends Fragment {
                         for(int i=0; i< count;i++) {
 //                           dataSet.add(response.getData().getGroups().get(0).get(i).getThumbnail());
                             recyclerAdapter.dataAdd(i,response.getData().getGroups().get(0).get(i).getThumbnail());
+                            Log.d("uesr_nick",String.valueOf(response.getData().getGroups().get(0).getContents().get(i).getUserNick()));
+                            Log.d("title",String.valueOf(response.getData().getGroups().get(0).getContents().get(i).getTitle()));
+                            Log.d("view_cnt",String.valueOf(response.getData().getGroups().get(0).getContents().get(i).getViewCount()));
+
                             recyclerAdapter.notifyItemInserted(i);
                         }
-                        Log.d("groups",String.valueOf(response.getData().getGroups().size()));
+                        Log.d("TITLE",String.valueOf(response.getData().getGroups().get(0).getTitle()));
+
 
                     }
             }

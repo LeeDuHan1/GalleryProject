@@ -61,7 +61,7 @@ public class Tab4Fragment extends Fragment {
         recyclerView.setHasFixedSize(true); // to improve performance if you know that changes.
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL));
-        recyclerAdapter = new NetRecyclerAdapter(activity);
+        recyclerAdapter = new NetRecyclerAdapter(activity,R.layout.content_vod_grid_view);
         recyclerView.setAdapter(recyclerAdapter);
 
         int deviceWidth = getResources().getDisplayMetrics().widthPixels;
