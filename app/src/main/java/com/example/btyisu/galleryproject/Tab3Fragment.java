@@ -64,7 +64,12 @@ public class Tab3Fragment extends Fragment {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         setImageCount();
-        recyclerAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        layoutManager = new GridLayoutManager(getActivity(),2);
     }
 
     @Nullable
@@ -73,6 +78,7 @@ public class Tab3Fragment extends Fragment {
         requestContentData();
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.tab3_fragment, container, false);
         initView(rootView);
+
         setRetainInstance(true);
         Toast.makeText(getActivity(),"onCreateView", Toast.LENGTH_SHORT).show();
         return rootView;
@@ -85,7 +91,15 @@ public class Tab3Fragment extends Fragment {
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL));
         recyclerAdapter = new NetRecyclerAdapter(activity,R.layout.content_live_grid_view,false);
         recyclerView.setAdapter(recyclerAdapter);
+        recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
 
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                GridLayoutManager gridLayoutManager = ((GridLayoutManager)recyclerView.getLayoutManager());
+                Log.d("last",String.valueOf(gridLayoutManager.findLastVisibleItemPosition()));
+            }
+        });
         setImageCount();
     }
 
@@ -94,15 +108,8 @@ public class Tab3Fragment extends Fragment {
         Log.d("디바이스크기 : ",String.valueOf(deviceWidth));
         int spanCount = deviceWidth/imageSize;
         int space = (deviceWidth - (imageSize*spanCount))/(spanCount*2);
-        if (layoutManager == null) {
-            layoutManager = new GridLayoutManager(getActivity(), spanCount);
-        }else {
-            layoutManager.setSpanCount(spanCount);
-        }
-        if(recyclerView.getLayoutManager() == null){
-            recyclerView.setLayoutManager(layoutManager);
-
-        }
+        layoutManager.setSpanCount(spanCount);
+        recyclerView.setLayoutManager(layoutManager);
         spacesItemDecoration = new SpacesItemDecoration(space);
         Log.d("데코카운트",String.valueOf(recyclerView.getItemDecorationCount()));
 //        int count = recyclerView.getItemDecorationCount();
@@ -154,6 +161,7 @@ public class Tab3Fragment extends Fragment {
             }
         };
     }
+
 
 
 }

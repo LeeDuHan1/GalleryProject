@@ -51,8 +51,14 @@ public class Tab4Fragment extends Fragment {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         setImageCount();
-        recyclerAdapter.notifyDataSetChanged();
     }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        layoutManager = new GridLayoutManager(getActivity(),2);
+    }
+
 
     @Nullable
     @Override
@@ -81,11 +87,7 @@ public class Tab4Fragment extends Fragment {
         Log.d("디바이스크기 : ",String.valueOf(deviceWidth));
         int spanCount = deviceWidth/imageSize;
         int space = (deviceWidth - (imageSize*spanCount))/(spanCount*2);
-        if (layoutManager == null) {
-            layoutManager = new GridLayoutManager(getActivity(), spanCount);
-        }else {
-            layoutManager.setSpanCount(spanCount);
-        }
+        layoutManager.setSpanCount(spanCount);
         recyclerView.setLayoutManager(layoutManager);
         spacesItemDecoration = new SpacesItemDecoration(space);
         Log.d("데코카운트",String.valueOf(recyclerView.getItemDecorationCount()));
