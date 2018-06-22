@@ -40,6 +40,11 @@ public class MyGsonRequest<T> extends Request<T> {
         mListener.onResponse(response);
     }
 
+    /**
+     * Json data를 받아와 ApiResponse class객체로 변환
+     * @param response
+     * @return
+     */
     @Override
     protected Response<T> parseNetworkResponse(NetworkResponse response) {
         try{
@@ -47,12 +52,12 @@ public class MyGsonRequest<T> extends Request<T> {
                 return null;
             }
             String json = new String(response.data);
-            return Response.success(mGson.fromJson(json, mClazz), HttpHeaderParser.parseCacheHeaders(response));
+            return Response.success(mGson.fromJson(json, mClazz),
+                    HttpHeaderParser.parseCacheHeaders(response));
         }catch (JsonSyntaxException e){
             return Response.error(new ParseError(e));
         }
     }
-
     @Override
     protected Map<String, String> getParams() throws AuthFailureError {
         return super.getParams();

@@ -22,20 +22,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        int memClass = ((ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
-        int maxMemory = (int)(Runtime.getRuntime().maxMemory()/1024);
 
-        Toast.makeText(getApplicationContext(),String.valueOf(maxMemory),Toast.LENGTH_SHORT).show();
         int permissionCheck = ContextCompat.checkSelfPermission( this, Manifest.permission.READ_EXTERNAL_STORAGE);
         if ( permissionCheck == PackageManager.PERMISSION_DENIED) {
             ActivityCompat.requestPermissions( this, new String[] {  Manifest.permission.READ_EXTERNAL_STORAGE  },11 );
         }
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-//        tabLayout.addTab(tabLayout.newTab().setText("Food"));
-//        tabLayout.addTab(tabLayout.newTab().setText("Music"));
         tabLayout.addTab(tabLayout.newTab().setText("Live"));
         tabLayout.addTab(tabLayout.newTab().setText("VOD"));
+//        tabLayout.addTab(tabLayout.newTab().setText("Live"));
+//        tabLayout.addTab(tabLayout.newTab().setText("VOD"));
 
         viewPager = (ViewPager) findViewById(R.id.pager);
         final PagerAdapter adapter = new TabPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());

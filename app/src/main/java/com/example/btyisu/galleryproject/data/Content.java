@@ -41,7 +41,6 @@ public class Content implements ItemData {
 
     @SerializedName("scheme")
     private String scheme;
-
     @SerializedName("thumbnail")
     private String thumbnail;
 

@@ -18,7 +18,6 @@ public class Group implements SectionData<Content> {
 
     @SerializedName("content_type")
     private String contentType;
-
     @SerializedName("contents")
     private List<Content> contents;
 

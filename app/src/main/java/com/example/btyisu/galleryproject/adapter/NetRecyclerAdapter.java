@@ -22,9 +22,12 @@ public class NetRecyclerAdapter extends RecyclerView.Adapter<NetRecyclerViewHold
     private int layoutId = 0;
     private RequestOptions options;
 
+    /**
+     * Live인경우 Thumbnail갱신 때문에 cache를 사용하지 않는다.
+     */
     public NetRecyclerAdapter(Context context, int layoutId, Boolean cache){
         this.context = context;
-        this.layoutId = layoutId;
+        this.layoutId = layoutId; //LIVE와 VOD를 view를 따로 선언해주기 위해
         if(cache) {
             options = new RequestOptions()
                     .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
@@ -56,13 +59,15 @@ public class NetRecyclerAdapter extends RecyclerView.Adapter<NetRecyclerViewHold
         params.width = imageSize;
         params.height = imageSize;
         holder.imageView.setLayoutParams(params);
-//        holder.imageView.setImageUrl(contents.get(position).getThumbnail(), MyVolley.getInstance(context).getImageLoader());
+
+        //holder.imageView.setImageUrl(contents.get(position).getThumbnail(), MyVolley.getInstance(context).getImageLoader());
+        //Volley의 NetworkImageView를 이용한 방법, image placeholder때문에 Glide사용
+
         String url = contents.get(position).getThumbnail();
         Glide.with(holder.imageView.getContext())
                 .load(url)
                 .apply(options)
                 .into(holder.imageView);
-
     }
 
     public void dataAdd(int position, Content content){

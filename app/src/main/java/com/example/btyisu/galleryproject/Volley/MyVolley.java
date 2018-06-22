@@ -31,24 +31,17 @@ public class MyVolley {
         return requestQueue;
     }
 
-//    public ImageLoader getImageLoader() {
-//        return imageLoader;
-//    }
     public ImageLoader getImageLoader() {
-        Log.d("ImageLoader","get");
 
         ImageLoader imageLoader = new ImageLoader(getRequestQueue(), new ImageLoader.ImageCache() {
         private final LruCache<String,Bitmap> mCache = new LruCache<String, Bitmap>(4*1024*1024);
             @Override
             public Bitmap getBitmap(String url) {
-                Log.d("ImageLoader","getBitmap");
-
                 return mCache.get(url);
             }
 
             @Override
             public void putBitmap(String url, Bitmap bitmap) {
-                Log.d("ImageLoader","putBitmap");
                 mCache.put(url, bitmap);
             }
         });

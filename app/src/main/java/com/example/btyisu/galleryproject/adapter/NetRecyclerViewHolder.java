@@ -35,23 +35,16 @@ public class NetRecyclerViewHolder extends RecyclerView.ViewHolder implements Vi
 
     @Override
     public void onClick(View view){
-        try {
-            long mTimeStamp = System.currentTimeMillis();
             NetImageDialogFragment netImageDialogFragment = new NetImageDialogFragment();
             Bundle bundle = new Bundle();
             bundle.putString("url",contents.get(getAdapterPosition()).getThumbnail());
             bundle.putString("title",contents.get(getAdapterPosition()).getTitle());
             bundle.putString("userNick",contents.get(getAdapterPosition()).getUserNick());
             bundle.putString("viewCnt",contents.get(getAdapterPosition()).getViewCount());
-            bundle.putString("timeStamp",String.valueOf(mTimeStamp));
 
             FragmentManager fragmentManager = ((AppCompatActivity)context).getSupportFragmentManager();
             netImageDialogFragment.setArguments(bundle);
             netImageDialogFragment.show(fragmentManager,"test");
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
     }
 
 }

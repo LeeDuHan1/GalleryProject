@@ -48,7 +48,6 @@ public class NetImageDialogFragment extends DialogFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mTimeStamp = System.currentTimeMillis();
         options = new RequestOptions()
                 .skipMemoryCache(true)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
@@ -59,9 +58,6 @@ public class NetImageDialogFragment extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle extra = getArguments();
-        long mGetTimeStamp = Long.parseLong(extra.getString("timeStamp"));
-
     }
 
     @Nullable
@@ -69,7 +65,6 @@ public class NetImageDialogFragment extends DialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.net_image_dialog_fragment, container, false);
         initView(view);
-
 
         Bundle extra = getArguments();
         Glide.with(getActivity())

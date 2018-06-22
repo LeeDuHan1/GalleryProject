@@ -8,7 +8,6 @@ public class Data {
 
     @SerializedName("has_more_list")
     private boolean hasMoreList;
-
     @SerializedName("groups")
     private List<Group> groups;
 

@@ -84,16 +84,14 @@ public class VodFragment extends Fragment {
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL));
         recyclerAdapter = new NetRecyclerAdapter(activity,R.layout.content_vod_grid_view,true);
         recyclerView.setAdapter(recyclerAdapter);
+        recyclerView.setLayoutManager(layoutManager);
         recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 GridLayoutManager gridLayoutManager = ((GridLayoutManager)recyclerView.getLayoutManager());
                 int lastViewItem = gridLayoutManager.findLastVisibleItemPosition()+1;
-                Log.d("last",String.valueOf(lastViewItem));
-                Log.d("adpaterCount",String.valueOf(recyclerAdapter.getItemCount()));
                 if(recyclerAdapter.getItemCount() == lastViewItem){
-                    Log.d("발동","했으요");
                     page += 1;
                     requestContentData();
                 }
@@ -104,23 +102,20 @@ public class VodFragment extends Fragment {
 
     private void setImageCount(){
         int deviceWidth = getResources().getDisplayMetrics().widthPixels;
-        Log.d("디바이스크기 : ",String.valueOf(deviceWidth));
         int spanCount = deviceWidth/imageSize;
         int space = (deviceWidth - (imageSize*spanCount))/(spanCount*2);
         layoutManager.setSpanCount(spanCount);
-        recyclerView.setLayoutManager(layoutManager);
         spacesItemDecoration = new SpacesItemDecoration(space);
-        Log.d("데코카운트",String.valueOf(recyclerView.getItemDecorationCount()));
-//        int count = recyclerView.getItemDecorationCount();
-//        for(int i = 0; i<count; i++){
         if(recyclerView.getItemDecorationCount()>2){
             recyclerView.removeItemDecorationAt(2);
         }
 
         recyclerView.addItemDecoration(spacesItemDecoration);
-        Log.d("space : ",String.valueOf(space));
     }
-
+    /**
+     * 아프리카 VOD data를 불러오고 RequestQueue에 추가한다.
+     * POST파라미터 값을 설정해준다.
+     */
     protected void requestContentData(){
         MyGsonRequest<ApiResponse> myReq = new MyGsonRequest<ApiResponse>(this.getActivity(),
                 Request.Method.POST,
@@ -148,6 +143,12 @@ public class VodFragment extends Fragment {
         };
         afRequestQueue.add(myReq);
     }
+    /**
+     * 데이터를 성공적으로 불러왔을경우 실행되며
+     * RecyclerView에 들어가 있는 item수를 불러와서 해당 인덱스부터
+     * 불러온 데이터수 인덱스까지 데이터를 추가시킨다.
+     * adapter에 noti하는 부분은 NetRecyclerViewAapter.dataAdd함수 부분에 구현되어 있습니다..
+     */
     private Response.Listener<ApiResponse> networkSuccessListener(){
         final String TAG = "networkSuccesListner";
         return new Response.Listener<ApiResponse>() {
@@ -157,9 +158,6 @@ public class VodFragment extends Fragment {
                 ArrayList<String> str = new ArrayList<>();
                 if (response != null) {
                     int count = response.getData().getGroups().get(0).size();
-                    Log.d("카운트",String.valueOf(count));
-                    Log.d("컨텐츠",response.getData().getGroups().get(0).getContents().get(0).getTitle());
-                    Log.d("re카운트",String.valueOf(recyclerAdapter.getItemCount()));
                     int adapterCount = recyclerAdapter.getItemCount();
                     for(int i=0; i< count;i++) {
                         recyclerAdapter.dataAdd(i+adapterCount,response.getData().getGroups().get(0).getContents().get(i));
@@ -178,6 +176,11 @@ public class VodFragment extends Fragment {
             }
         };
     }
-
+    public void onDestroy() {
+        super.onDestroy();
+        if(layoutManager != null){
+            layoutManager = null;
+        }
+    }
 
 }
