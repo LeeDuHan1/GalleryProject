@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -23,22 +24,26 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.example.btyisu.galleryproject.Volley.MyGsonRequest;
 import com.example.btyisu.galleryproject.Volley.MyVolley;
+import com.example.btyisu.galleryproject.adapter.NetRecyclerAdapter;
 import com.example.btyisu.galleryproject.data.ApiResponse;
-import com.example.btyisu.galleryproject.data.Content;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-public class Tab4Fragment extends Fragment {
-    private final String server_url = "http://api.m.afreecatv.com/station/video/section/a/items2";
+public class LiveFragment extends Fragment {
+    private final String server_url = "http://api.m.afreecatv.com/broad/a/items2";
     private ImageLoader imageLoader;
     private Activity activity= null;
     private RecyclerView recyclerView = null;
     private NetRecyclerAdapter recyclerAdapter = null;
     private GridLayoutManager layoutManager= null;
     private SpacesItemDecoration spacesItemDecoration = null;
+    private RequestQueue afRequestQueue = null;
     private int imageSize = 700;
+    public int page = 1;
 
-    public Tab4Fragment(){}
+    public LiveFragment(){}
 
     @Override
     public void onAttach(Context context) {
@@ -47,6 +52,7 @@ public class Tab4Fragment extends Fragment {
             activity = (Activity) context;
         }
     }
+
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -57,14 +63,14 @@ public class Tab4Fragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         layoutManager = new GridLayoutManager(getActivity(),2);
+        afRequestQueue = MyVolley.getInstance(getActivity()).getRequestQueue();
     }
-
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         requestContentData();
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.tab4_fragment, container, false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.live_fragment, container, false);
         initView(rootView);
         setRetainInstance(true);
         Toast.makeText(getActivity(),"onCreateView", Toast.LENGTH_SHORT).show();
@@ -72,13 +78,27 @@ public class Tab4Fragment extends Fragment {
     }
 
     private void initView(View view){
-        recyclerView = (RecyclerView) view.findViewById(R.id.tab4_recycler_view);
+        recyclerView = (RecyclerView) view.findViewById(R.id.live_recycler_view);
         recyclerView.setHasFixedSize(true); // to improve performance if you know that changes.
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL));
-        recyclerAdapter = new NetRecyclerAdapter(activity,R.layout.content_vod_grid_view,true);
+        recyclerAdapter = new NetRecyclerAdapter(activity,R.layout.content_live_grid_view,false);
         recyclerView.setAdapter(recyclerAdapter);
-
+        recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                GridLayoutManager gridLayoutManager = ((GridLayoutManager)recyclerView.getLayoutManager());
+                int lastViewItem = gridLayoutManager.findLastVisibleItemPosition()+1;
+                Log.d("last",String.valueOf(lastViewItem));
+                Log.d("adpaterCount",String.valueOf(recyclerAdapter.getItemCount()));
+                if(recyclerAdapter.getItemCount() == lastViewItem){
+                    Log.d("발동","했으요");
+                    page += 1;
+                    requestContentData();
+                }
+            }
+        });
         setImageCount();
     }
 
@@ -102,14 +122,20 @@ public class Tab4Fragment extends Fragment {
     }
 
     protected void requestContentData(){
-        final RequestQueue afRequestQueue = MyVolley.getInstance(getActivity()).getRequestQueue();
-
         MyGsonRequest<ApiResponse> myReq = new MyGsonRequest<ApiResponse>(this.getActivity(),
                 Request.Method.POST,
                 server_url,
                 ApiResponse.class,
                 networkSuccessListener(),
-                networkErrorListener());
+                networkErrorListener()) {
+            protected Map<String,String> getParams() throws AuthFailureError{
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("current_page",String.valueOf(page));
+                Log.d("페이지",String.valueOf(page));
+                params.put("theme_id","all");
+                return params;
+            }
+        };
 
         afRequestQueue.add(myReq);
     }
@@ -120,14 +146,18 @@ public class Tab4Fragment extends Fragment {
             public void onResponse(ApiResponse response) {
                 String result = null;
                 ArrayList<String> str = new ArrayList<>();
-                if (response != null) {
-                    int count = response.getData().getGroups().get(0).size();
-                    for(int i=0; i< count;i++) {
-                        recyclerAdapter.dataAdd(i,response.getData().getGroups().get(0).getContents().get(i));
-                        recyclerAdapter.notifyItemInserted(i);
+                    if (response != null) {
+                        int count = response.getData().getGroups().get(0).size();
+                        Log.d("카운트",String.valueOf(count));
+                        Log.d("컨텐츠",response.getData().getGroups().get(0).getContents().get(0).getTitle());
+                        Log.d("re카운트",String.valueOf(recyclerAdapter.getItemCount()));
+                        int adapterCount = recyclerAdapter.getItemCount();
+                        for(int i=0; i< count;i++) {
+                            recyclerAdapter.dataAdd(i+adapterCount,response.getData().getGroups().get(0).getContents().get(i));
+//                            recyclerAdapter.notifyItemInserted(i+recyclerAdapter.getItemCount());
+                        }
+                        Log.d("TITLE",String.valueOf(response.getData().getGroups().get(0).getContents()));
                     }
-                    Log.d("TITLE",String.valueOf(response.getData().getGroups().get(0).getContents()));
-                }
             }
         };
     }
@@ -140,6 +170,7 @@ public class Tab4Fragment extends Fragment {
             }
         };
     }
+
 
 
 }

@@ -3,8 +3,6 @@ package com.example.btyisu.galleryproject;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.media.Image;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,9 +14,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -27,22 +22,17 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.NetworkImageView;
 import com.example.btyisu.galleryproject.Volley.MyGsonRequest;
 import com.example.btyisu.galleryproject.Volley.MyVolley;
+import com.example.btyisu.galleryproject.adapter.NetRecyclerAdapter;
 import com.example.btyisu.galleryproject.data.ApiResponse;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Tab3Fragment extends Fragment {
-    private final String server_url = "http://api.m.afreecatv.com/broad/a/items2";
+public class VodFragment extends Fragment {
+    private final String server_url = "http://sch.afreecatv.com/api.php";
     private ImageLoader imageLoader;
     private Activity activity= null;
     private RecyclerView recyclerView = null;
@@ -53,7 +43,7 @@ public class Tab3Fragment extends Fragment {
     private int imageSize = 700;
     public int page = 1;
 
-    public Tab3Fragment(){}
+    public VodFragment(){}
 
     @Override
     public void onAttach(Context context) {
@@ -61,10 +51,7 @@ public class Tab3Fragment extends Fragment {
         if(context instanceof Activity){
             activity = (Activity) context;
         }
-        Toast.makeText(getActivity(),"onAttach", Toast.LENGTH_SHORT).show();
-
     }
-
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -78,30 +65,29 @@ public class Tab3Fragment extends Fragment {
         afRequestQueue = MyVolley.getInstance(getActivity()).getRequestQueue();
     }
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         requestContentData();
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.tab3_fragment, container, false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.vod_fragment, container, false);
         initView(rootView);
-
         setRetainInstance(true);
         Toast.makeText(getActivity(),"onCreateView", Toast.LENGTH_SHORT).show();
         return rootView;
     }
 
     private void initView(View view){
-        recyclerView = (RecyclerView) view.findViewById(R.id.tab3_recycler_view);
+        recyclerView = (RecyclerView) view.findViewById(R.id.vod_recycler_view);
         recyclerView.setHasFixedSize(true); // to improve performance if you know that changes.
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL));
-        recyclerAdapter = new NetRecyclerAdapter(activity,R.layout.content_live_grid_view,false);
+        recyclerAdapter = new NetRecyclerAdapter(activity,R.layout.content_vod_grid_view,true);
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
-
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
                 GridLayoutManager gridLayoutManager = ((GridLayoutManager)recyclerView.getLayoutManager());
                 int lastViewItem = gridLayoutManager.findLastVisibleItemPosition()+1;
                 Log.d("last",String.valueOf(lastViewItem));
@@ -142,14 +128,24 @@ public class Tab3Fragment extends Fragment {
                 ApiResponse.class,
                 networkSuccessListener(),
                 networkErrorListener()) {
-            protected Map<String,String> getParams() throws AuthFailureError{
+            protected Map<String,String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
+                params.put("szPlatform","mobile");
                 params.put("current_page",String.valueOf(page));
-                params.put("theme_id","all");
+                params.put("v","1.0");
+                params.put("nListCnt","20");
+                params.put("szOrder","view_cnt");
+                params.put("szTerm","1week");
+                params.put("nPageNo",String.valueOf(page));
+                params.put("rows_per_page","30");
+                params.put("szCateNo","00000000");
+                params.put("m","vodList");
+                params.put("align_type","grid");
+                Log.d("페이지",String.valueOf(page));
+//                params.put("theme_id","later");
                 return params;
             }
         };
-
         afRequestQueue.add(myReq);
     }
     private Response.Listener<ApiResponse> networkSuccessListener(){
@@ -159,14 +155,17 @@ public class Tab3Fragment extends Fragment {
             public void onResponse(ApiResponse response) {
                 String result = null;
                 ArrayList<String> str = new ArrayList<>();
-                    if (response != null) {
-                        int count = response.getData().getGroups().get(0).size();
-                        for(int i=0; i< count;i++) {
-                            recyclerAdapter.dataAdd(i,response.getData().getGroups().get(0).getContents().get(i));
-                            recyclerAdapter.notifyItemInserted(i);
-                        }
-                        Log.d("TITLE",String.valueOf(response.getData().getGroups().get(0).getContents()));
+                if (response != null) {
+                    int count = response.getData().getGroups().get(0).size();
+                    Log.d("카운트",String.valueOf(count));
+                    Log.d("컨텐츠",response.getData().getGroups().get(0).getContents().get(0).getTitle());
+                    Log.d("re카운트",String.valueOf(recyclerAdapter.getItemCount()));
+                    int adapterCount = recyclerAdapter.getItemCount();
+                    for(int i=0; i< count;i++) {
+                        recyclerAdapter.dataAdd(i+adapterCount,response.getData().getGroups().get(0).getContents().get(i));
                     }
+                    Log.d("TITLE",String.valueOf(response.getData().getGroups().get(0).getContents()));
+                }
             }
         };
     }
@@ -179,7 +178,6 @@ public class Tab3Fragment extends Fragment {
             }
         };
     }
-
 
 
 }

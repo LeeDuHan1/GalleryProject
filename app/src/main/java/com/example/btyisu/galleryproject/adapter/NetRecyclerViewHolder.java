@@ -1,4 +1,4 @@
-package com.example.btyisu.galleryproject;
+package com.example.btyisu.galleryproject.adapter;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
+import com.example.btyisu.galleryproject.NetImageDialogFragment;
+import com.example.btyisu.galleryproject.R;
 import com.example.btyisu.galleryproject.data.Content;
 
 import org.w3c.dom.Text;

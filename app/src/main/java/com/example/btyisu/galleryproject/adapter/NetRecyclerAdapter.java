@@ -1,6 +1,5 @@
-package com.example.btyisu.galleryproject;
+package com.example.btyisu.galleryproject.adapter;
 
-import android.app.DownloadManager;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -11,14 +10,9 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.DrawableImageViewTarget;
-import com.bumptech.glide.request.target.ImageViewTarget;
-import com.bumptech.glide.request.target.ViewTarget;
-import com.example.btyisu.galleryproject.Volley.MyVolley;
+import com.example.btyisu.galleryproject.R;
 import com.example.btyisu.galleryproject.data.Content;
-import com.example.btyisu.galleryproject.data.Group;
 
-import java.net.URL;
 import java.util.ArrayList;
 
 public class NetRecyclerAdapter extends RecyclerView.Adapter<NetRecyclerViewHolder> {
@@ -27,6 +21,7 @@ public class NetRecyclerAdapter extends RecyclerView.Adapter<NetRecyclerViewHold
     private int imageSize = 700;
     private int layoutId = 0;
     private RequestOptions options;
+
     public NetRecyclerAdapter(Context context, int layoutId, Boolean cache){
         this.context = context;
         this.layoutId = layoutId;

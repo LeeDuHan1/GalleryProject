@@ -3,34 +3,18 @@ package com.example.btyisu.galleryproject;
 import android.Manifest;
 import android.app.ActivityManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentContainer;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.zip.Inflater;
+import com.example.btyisu.galleryproject.adapter.TabPagerAdapter;
+
 
 public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager = null;
@@ -48,8 +32,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText("Food"));
-        tabLayout.addTab(tabLayout.newTab().setText("Music"));
+//        tabLayout.addTab(tabLayout.newTab().setText("Food"));
+//        tabLayout.addTab(tabLayout.newTab().setText("Music"));
         tabLayout.addTab(tabLayout.newTab().setText("Live"));
         tabLayout.addTab(tabLayout.newTab().setText("VOD"));
 
