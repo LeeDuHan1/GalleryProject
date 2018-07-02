@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -51,6 +52,11 @@ public class NetImageDialogFragment extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        Bundle extra = getArguments();
+//        Toast.makeText(getContext(),extra.getString("currentTime"),Toast.LENGTH_SHORT).show();
+//        long mClickTime = extra.getLong("currentTime");
+//        long mCurrentTime = System.currentTimeMillis();
+//        if(mCurrentTime-mClickTime)
     }
 
     @Nullable

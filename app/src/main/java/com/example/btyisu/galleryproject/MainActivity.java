@@ -31,12 +31,17 @@ public class MainActivity extends AppCompatActivity {
         TabLayout mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
         mTabLayout.addTab(mTabLayout.newTab().setText("Live"));
         mTabLayout.addTab(mTabLayout.newTab().setText("VOD"));
+//        mTabLayout.addTab(mTabLayout.newTab().setText("Live"));
+//        mTabLayout.addTab(mTabLayout.newTab().setText("VOD"));
 
         ArrayList<Fragment> mFragmentList = new ArrayList<Fragment>();
         mFragmentList.add(LiveFragment.getInstance());
         mFragmentList.add(VodFragment.getInstance());
+//        mFragmentList.add(LiveFragment.getInstance());
+//        mFragmentList.add(VodFragment.getInstance());
 
         mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager.setOffscreenPageLimit(mTabLayout.getTabCount());
 
         final PagerAdapter adapter = new TabPagerAdapter(getSupportFragmentManager(), mTabLayout.getTabCount(), mFragmentList);
 
