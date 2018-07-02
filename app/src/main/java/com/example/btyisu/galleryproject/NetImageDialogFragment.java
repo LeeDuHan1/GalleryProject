@@ -24,7 +24,7 @@ public class NetImageDialogFragment extends DialogFragment {
     public TextView mViewCntText;
     private StringBuilder mViewCntString = new StringBuilder("");
     private RequestOptions options = null;
-    private long mTimeStamp;
+
     public NetImageDialogFragment(){}
 
     public static NetImageDialogFragment getInstance(){
@@ -52,11 +52,6 @@ public class NetImageDialogFragment extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        Bundle extra = getArguments();
-//        Toast.makeText(getContext(),extra.getString("currentTime"),Toast.LENGTH_SHORT).show();
-//        long mClickTime = extra.getLong("currentTime");
-//        long mCurrentTime = System.currentTimeMillis();
-//        if(mCurrentTime-mClickTime)
     }
 
     @Nullable

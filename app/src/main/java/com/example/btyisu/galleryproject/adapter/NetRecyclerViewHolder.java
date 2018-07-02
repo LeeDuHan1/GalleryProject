@@ -27,9 +27,9 @@ public class NetRecyclerViewHolder extends RecyclerView.ViewHolder implements Vi
         this.context = context;
         this.contents = contents;
     }
-
     /**
-     *
+     * 이전의 click시 시간인 mIamgePreClickTime과 새로운 image click시 시간인
+     * mImageCurrentClickTime의 시간차를 비교하여 2초보다 빠르다면 Dialog Fragment를 실행시키지 않는다.
      * @param view
      */
     @Override
@@ -45,9 +45,9 @@ public class NetRecyclerViewHolder extends RecyclerView.ViewHolder implements Vi
             bundle.putString("title", contents.get(getAdapterPosition()).getTitle());
             bundle.putString("userNick", contents.get(getAdapterPosition()).getUserNick());
             bundle.putString("viewCnt", contents.get(getAdapterPosition()).getViewCount());
-            bundle.putString("currentTime", String.valueOf(mImageCurrentClickTime));
             netImageDialogFragment.setArguments(bundle);
             netImageDialogFragment.show(mNetImageDialogFragmentManager, "test");
+
             mImagePreClickTime = System.currentTimeMillis();
         }
     }

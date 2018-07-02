@@ -7,6 +7,6 @@ public class Const {
     }
     public class Size {
         public static final int THUMBNAIL_IMAGE_SIZE = 500;
-        public static final int IMAGE_DIALOG_SIZE = 800;
+        public static final int IMAGE_DIALOG_SIZE = 900;
     }
 }
