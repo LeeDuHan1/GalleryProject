@@ -22,8 +22,9 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
-import com.example.btyisu.galleryproject.Volley.MyGsonRequest;
-import com.example.btyisu.galleryproject.Volley.MyVolley;
+import com.example.btyisu.galleryproject.statics.Const;
+import com.example.btyisu.galleryproject.volley.MyGsonRequest;
+import com.example.btyisu.galleryproject.volley.MyVolley;
 import com.example.btyisu.galleryproject.adapter.NetRecyclerAdapter;
 import com.example.btyisu.galleryproject.data.ApiResponse;
 
@@ -32,26 +33,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class VodFragment extends Fragment {
-    private final String server_url = "http://sch.afreecatv.com/api.php";
-    private ImageLoader imageLoader;
-    private Activity activity= null;
-    private RecyclerView recyclerView = null;
-    private NetRecyclerAdapter recyclerAdapter = null;
-    private GridLayoutManager layoutManager= null;
-    private SpacesItemDecoration spacesItemDecoration = null;
-    private RequestQueue afRequestQueue = null;
-    private int imageSize = 700;
-    public int page = 1;
-
+    private RecyclerView mThumbnailRecyclerView = null;
+    private NetRecyclerAdapter mRecyclerAdapter = null;
+    private GridLayoutManager mLayoutManager = null;
+    private SpacesItemDecoration mSpacesItemDecoration = null;
+    private RequestQueue mRequestQueue = null;
+    private int page = 1;
+    private static VodFragment mVodFragmentInstance;
     public VodFragment(){}
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if(context instanceof Activity){
-            activity = (Activity) context;
+    public static VodFragment getInstance(){
+        if(mVodFragmentInstance == null){
+            mVodFragmentInstance = new VodFragment();
         }
+        return mVodFragmentInstance;
     }
+
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -61,8 +58,8 @@ public class VodFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        layoutManager = new GridLayoutManager(getActivity(),2);
-        afRequestQueue = MyVolley.getInstance(getActivity()).getRequestQueue();
+        mLayoutManager = new GridLayoutManager(getActivity(),2);
+        mRequestQueue = MyVolley.getInstance(getActivity()).getRequestQueue();
     }
 
 
@@ -78,20 +75,20 @@ public class VodFragment extends Fragment {
     }
 
     private void initView(View view){
-        recyclerView = (RecyclerView) view.findViewById(R.id.vod_recycler_view);
-        recyclerView.setHasFixedSize(true); // to improve performance if you know that changes.
-        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
-        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL));
-        recyclerAdapter = new NetRecyclerAdapter(activity,R.layout.content_vod_grid_view,true);
-        recyclerView.setAdapter(recyclerAdapter);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+        mThumbnailRecyclerView = (RecyclerView) view.findViewById(R.id.vod_recycler_view);
+        mThumbnailRecyclerView.setHasFixedSize(true); // to improve performance if you know that changes.
+        mThumbnailRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+        mThumbnailRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL));
+        mRecyclerAdapter = new NetRecyclerAdapter(getContext(), R.layout.content_vod_grid_view,true);
+        mThumbnailRecyclerView.setAdapter(mRecyclerAdapter);
+        mThumbnailRecyclerView.setLayoutManager(mLayoutManager);
+        mThumbnailRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 GridLayoutManager gridLayoutManager = ((GridLayoutManager)recyclerView.getLayoutManager());
                 int lastViewItem = gridLayoutManager.findLastVisibleItemPosition()+1;
-                if(recyclerAdapter.getItemCount() == lastViewItem){
+                if(mRecyclerAdapter.getItemCount() == lastViewItem){
                     page += 1;
                     requestContentData();
                 }
@@ -102,15 +99,15 @@ public class VodFragment extends Fragment {
 
     private void setImageCount(){
         int deviceWidth = getResources().getDisplayMetrics().widthPixels;
-        int spanCount = deviceWidth/imageSize;
-        int space = (deviceWidth - (imageSize*spanCount))/(spanCount*2);
-        layoutManager.setSpanCount(spanCount);
-        spacesItemDecoration = new SpacesItemDecoration(space);
-        if(recyclerView.getItemDecorationCount()>2){
-            recyclerView.removeItemDecorationAt(2);
+        int spanCount = deviceWidth / Const.Size.THUMBNAIL_IMAGE_SIZE;
+        int space = (deviceWidth - (Const.Size.THUMBNAIL_IMAGE_SIZE * spanCount))/(spanCount * 2);
+        mLayoutManager.setSpanCount(spanCount);
+        mSpacesItemDecoration = new SpacesItemDecoration(space);
+        if(mThumbnailRecyclerView.getItemDecorationCount()>2){
+            mThumbnailRecyclerView.removeItemDecorationAt(2);
         }
 
-        recyclerView.addItemDecoration(spacesItemDecoration);
+        mThumbnailRecyclerView.addItemDecoration(mSpacesItemDecoration);
     }
     /**
      * 아프리카 VOD data를 불러오고 RequestQueue에 추가한다.
@@ -119,7 +116,7 @@ public class VodFragment extends Fragment {
     protected void requestContentData(){
         MyGsonRequest<ApiResponse> myReq = new MyGsonRequest<ApiResponse>(this.getActivity(),
                 Request.Method.POST,
-                server_url,
+                Const.Url.VOD_URL,
                 ApiResponse.class,
                 networkSuccessListener(),
                 networkErrorListener()) {
@@ -141,7 +138,7 @@ public class VodFragment extends Fragment {
                 return params;
             }
         };
-        afRequestQueue.add(myReq);
+        mRequestQueue.add(myReq);
     }
     /**
      * 데이터를 성공적으로 불러왔을경우 실행되며
@@ -158,9 +155,9 @@ public class VodFragment extends Fragment {
                 ArrayList<String> str = new ArrayList<>();
                 if (response != null) {
                     int count = response.getData().getGroups().get(0).size();
-                    int adapterCount = recyclerAdapter.getItemCount();
+                    int adapterCount = mRecyclerAdapter.getItemCount();
                     for(int i=0; i< count;i++) {
-                        recyclerAdapter.dataAdd(i+adapterCount,response.getData().getGroups().get(0).getContents().get(i));
+                        mRecyclerAdapter.dataAdd(i+adapterCount,response.getData().getGroups().get(0).getContents().get(i));
                     }
                     Log.d("TITLE",String.valueOf(response.getData().getGroups().get(0).getContents()));
                 }
@@ -172,14 +169,14 @@ public class VodFragment extends Fragment {
         return new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(activity, "network error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "network error", Toast.LENGTH_SHORT).show();
             }
         };
     }
     public void onDestroy() {
         super.onDestroy();
-        if(layoutManager != null){
-            layoutManager = null;
+        if(mLayoutManager != null){
+            mLayoutManager = null;
         }
     }
 

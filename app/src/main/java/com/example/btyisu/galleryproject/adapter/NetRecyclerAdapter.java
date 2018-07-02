@@ -12,13 +12,13 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.btyisu.galleryproject.R;
 import com.example.btyisu.galleryproject.data.Content;
+import com.example.btyisu.galleryproject.statics.Const;
 
 import java.util.ArrayList;
 
 public class NetRecyclerAdapter extends RecyclerView.Adapter<NetRecyclerViewHolder> {
     private ArrayList<Content> contents = new ArrayList<>();
     private Context context;
-    private int imageSize = 700;
     private int layoutId = 0;
     private RequestOptions options;
 
@@ -56,8 +56,8 @@ public class NetRecyclerAdapter extends RecyclerView.Adapter<NetRecyclerViewHold
     @Override
     public void onBindViewHolder(@NonNull final NetRecyclerViewHolder holder, final int position) {
         ViewGroup.LayoutParams params = holder.imageView.getLayoutParams();
-        params.width = imageSize;
-        params.height = imageSize;
+        params.width = Const.Size.THUMBNAIL_IMAGE_SIZE;
+        params.height = Const.Size.THUMBNAIL_IMAGE_SIZE;
         holder.imageView.setLayoutParams(params);
 
         //holder.imageView.setImageUrl(contents.get(position).getThumbnail(), MyVolley.getInstance(context).getImageLoader());

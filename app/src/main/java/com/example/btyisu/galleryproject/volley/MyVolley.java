@@ -1,9 +1,7 @@
-package com.example.btyisu.galleryproject.Volley;
+package com.example.btyisu.galleryproject.volley;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.text.TextUtils;
-import android.util.Log;
 import android.util.LruCache;
 
 import com.android.volley.RequestQueue;

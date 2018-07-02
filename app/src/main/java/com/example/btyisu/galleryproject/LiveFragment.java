@@ -22,8 +22,9 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
-import com.example.btyisu.galleryproject.Volley.MyGsonRequest;
-import com.example.btyisu.galleryproject.Volley.MyVolley;
+import com.example.btyisu.galleryproject.statics.Const;
+import com.example.btyisu.galleryproject.volley.MyGsonRequest;
+import com.example.btyisu.galleryproject.volley.MyVolley;
 import com.example.btyisu.galleryproject.adapter.NetRecyclerAdapter;
 import com.example.btyisu.galleryproject.data.ApiResponse;
 
@@ -32,26 +33,28 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class LiveFragment extends Fragment {
-    private final String server_url = "http://api.m.afreecatv.com/broad/a/items2";
-    private ImageLoader imageLoader;
-    private Activity activity= null;
-    private RecyclerView recyclerView = null;
-    private NetRecyclerAdapter recyclerAdapter = null;
-    private GridLayoutManager layoutManager= null;
-    private SpacesItemDecoration spacesItemDecoration = null;
-    private RequestQueue afRequestQueue = null;
-    private int imageSize = 700;
-    public int page = 1;
+    private RecyclerView mTumbnailRecyclerView = null;
+    private NetRecyclerAdapter mRecyclerAdapter = null;
+    private GridLayoutManager mLayoutManager = null;
+    private SpacesItemDecoration mSpacesItemDecoration = null;
+    private RequestQueue mRequestQueue = null;
+    private int page = 1;
+    private static LiveFragment mLiveFragmentInstance;
 
     public LiveFragment(){}
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if(context instanceof Activity){
-            activity = (Activity) context;
+    public static LiveFragment getInstance(){
+        if(mLiveFragmentInstance == null){
+            mLiveFragmentInstance = new LiveFragment();
         }
+        return mLiveFragmentInstance;
     }
+//    public static LiveFragment getInstance(){
+//        return LazyHolder.INSTANCE;
+//    }
+//    private static class LazyHolder{
+//        private static final LiveFragment INSTANCE = new LiveFragment();
+//    }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -62,8 +65,8 @@ public class LiveFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        layoutManager = new GridLayoutManager(getActivity(),2);
-        afRequestQueue = MyVolley.getInstance(getActivity()).getRequestQueue();
+        mLayoutManager = new GridLayoutManager(getActivity(),2);
+        mRequestQueue = MyVolley.getInstance(getActivity()).getRequestQueue();
     }
 
     @Nullable
@@ -78,25 +81,27 @@ public class LiveFragment extends Fragment {
     }
 
     private void initView(View view){
-        recyclerView = (RecyclerView) view.findViewById(R.id.live_recycler_view);
-        recyclerView.setHasFixedSize(true); // to improve performance if you know that changes.
-        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
-        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL));
-        recyclerAdapter = new NetRecyclerAdapter(activity,R.layout.content_live_grid_view,false);
-        recyclerView.setAdapter(recyclerAdapter);
-        recyclerView.setLayoutManager(layoutManager);
+        mTumbnailRecyclerView = (RecyclerView) view.findViewById(R.id.live_recycler_view);
+        mTumbnailRecyclerView.setHasFixedSize(true); // to improve performance if you know that changes.
+        mTumbnailRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+        mTumbnailRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.HORIZONTAL));
+        mRecyclerAdapter = new NetRecyclerAdapter(getContext(), R.layout.content_live_grid_view,false);
+        mTumbnailRecyclerView.setAdapter(mRecyclerAdapter);
+        if(mTumbnailRecyclerView.getLayoutManager() == null) {
+            mTumbnailRecyclerView.setLayoutManager(mLayoutManager);
+        }
         setImageCount();
         /**
          * Scroll이 끝날때 총 item갯수와 RecyclerView의 마지막 인덱스를 비교하여
          * 스크롤의 마지막지점임을 판단하고 page를 1증가시켜 다음페이지 data를 요청합니다.
          */
-        recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+        mTumbnailRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 GridLayoutManager gridLayoutManager = ((GridLayoutManager)recyclerView.getLayoutManager());
                 int lastViewItem = gridLayoutManager.findLastVisibleItemPosition()+1;
-                if(recyclerAdapter.getItemCount() == lastViewItem){
+                if(mRecyclerAdapter.getItemCount() == lastViewItem){
                     page += 1;
                     requestContentData();
                 }
@@ -105,15 +110,15 @@ public class LiveFragment extends Fragment {
     }
 
     private void setImageCount(){
-        int deviceWidth = getResources().getDisplayMetrics().widthPixels;
-        int spanCount = deviceWidth/imageSize;
-        int space = (deviceWidth - (imageSize*spanCount))/(spanCount*2);
-        layoutManager.setSpanCount(spanCount);
-        spacesItemDecoration = new SpacesItemDecoration(space);
-        if(recyclerView.getItemDecorationCount()>2){
-            recyclerView.removeItemDecorationAt(2);
+        int mDeviceWidth = getResources().getDisplayMetrics().widthPixels;
+        int mSpanCount = mDeviceWidth/ Const.Size.THUMBNAIL_IMAGE_SIZE;
+        int mSpace = (mDeviceWidth - (Const.Size.THUMBNAIL_IMAGE_SIZE * mSpanCount))/(mSpanCount * 2);
+        mLayoutManager.setSpanCount(mSpanCount);
+        mSpacesItemDecoration = new SpacesItemDecoration(mSpace);
+        if(mTumbnailRecyclerView.getItemDecorationCount()>2){
+            mTumbnailRecyclerView.removeItemDecorationAt(2);
         }
-        recyclerView.addItemDecoration(spacesItemDecoration);
+        mTumbnailRecyclerView.addItemDecoration(mSpacesItemDecoration);
     }
 
     /**
@@ -123,7 +128,7 @@ public class LiveFragment extends Fragment {
     protected void requestContentData(){
         MyGsonRequest<ApiResponse> myReq = new MyGsonRequest<ApiResponse>(this.getActivity(),
                 Request.Method.POST,
-                server_url,
+                Const.Url.LIVE_URL,
                 ApiResponse.class,
                 networkSuccessListener(),
                 networkErrorListener()) {
@@ -134,7 +139,7 @@ public class LiveFragment extends Fragment {
                 return params;
             }
         };
-        afRequestQueue.add(myReq);
+        mRequestQueue.add(myReq);
     }
 
     /**
@@ -152,9 +157,9 @@ public class LiveFragment extends Fragment {
                 ArrayList<String> str = new ArrayList<>();
                     if (response != null) {
                         int count = response.getData().getGroups().get(0).size();
-                        int adapterCount = recyclerAdapter.getItemCount();
+                        int adapterCount = mRecyclerAdapter.getItemCount();
                         for(int i=0; i< count;i++) {
-                            recyclerAdapter.dataAdd(i+adapterCount, response.getData().getGroups().get(0).getContents().get(i));
+                            mRecyclerAdapter.dataAdd(i+adapterCount, response.getData().getGroups().get(0).getContents().get(i));
                         }
                         Log.d("TITLE",String.valueOf(response.getData().getGroups().get(0).getContents()));
                     }
@@ -169,7 +174,7 @@ public class LiveFragment extends Fragment {
         return new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(activity, "network error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "network error", Toast.LENGTH_SHORT).show();
             }
         };
     }
@@ -177,8 +182,8 @@ public class LiveFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(layoutManager != null){
-            layoutManager = null;
+        if(mLayoutManager != null){
+            mLayoutManager = null;
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.example.btyisu.galleryproject.Volley;
+package com.example.btyisu.galleryproject.volley;
 
 import android.content.Context;
 
@@ -12,7 +12,6 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 public class MyGsonRequest<T> extends Request<T> {

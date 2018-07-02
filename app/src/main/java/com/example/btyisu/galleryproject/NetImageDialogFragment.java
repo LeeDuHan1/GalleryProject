@@ -1,26 +1,20 @@
 package com.example.btyisu.galleryproject;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.NetworkImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.btyisu.galleryproject.Volley.MyVolley;
-import com.example.btyisu.galleryproject.utils.StringUtils;
+import com.example.btyisu.galleryproject.statics.Const;
 
 public class NetImageDialogFragment extends DialogFragment {
     private ImageView imageView;
@@ -29,16 +23,15 @@ public class NetImageDialogFragment extends DialogFragment {
     public TextView mViewCntText;
     private StringBuilder mViewCntString = new StringBuilder("");
     private RequestOptions options = null;
-    private int imageSize = 1200;
     private long mTimeStamp;
     public NetImageDialogFragment(){}
 
-//    public static NetImageDialogFragment getInstance(){
-//        return LazyHolder.INSTANCE;
-//    }
-//    private static class LazyHolder{
-//        private static final NetImageDialogFragment INSTANCE = new NetImageDialogFragment();
-//    }
+    public static NetImageDialogFragment getInstance(){
+        return LazyHolder.INSTANCE;
+    }
+    private static class LazyHolder{
+        private static final NetImageDialogFragment INSTANCE = new NetImageDialogFragment();
+    }
 
     @Override
     public void setArguments(@Nullable Bundle args) {
@@ -86,12 +79,12 @@ public class NetImageDialogFragment extends DialogFragment {
         mViewCntText = (TextView) view.findViewById(R.id.view_cnt_text);
 
         ViewGroup.LayoutParams mImageParams = imageView.getLayoutParams();
-        mImageParams.width = imageSize;
-        mImageParams.height = imageSize;
+        mImageParams.width = Const.Size.IMAGE_DIALOG_SIZE;
+        mImageParams.height = Const.Size.IMAGE_DIALOG_SIZE;
         imageView.setLayoutParams(mImageParams);
 
         ViewGroup.LayoutParams mTitleParams = mTitleText.getLayoutParams();
-        mTitleParams.width = imageSize;
+        mTitleParams.width = Const.Size.IMAGE_DIALOG_SIZE;
         mTitleText.setLayoutParams(mTitleParams);
     }
 }
